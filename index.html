@@ -7,9 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Heebo', sans-serif; }
-  </style>
+  <style> body { font-family: 'Heebo', sans-serif; } </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col pb-12 selection:bg-amber-500 selection:text-slate-950">
 
@@ -20,35 +18,32 @@
         <span class="text-2xl">👶</span>
         <div>
           <h1 class="text-lg font-extrabold text-amber-400">יומן שינה – עברי</h1>
-          <p class="text-[11px] text-slate-400">מעקב תהליך ייעוץ שינה</p>
+          <p class="text-[11px] text-slate-400">תהליך ייעוץ שינה</p>
         </div>
       </div>
       <button onclick="exportCSV()" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1.5 rounded-xl hover:bg-amber-500/20 transition font-bold">📥 ייצוא CSV</button>
     </div>
   </header>
 
-  <!-- Navigation -->
+  <!-- Navigation Tabs -->
   <nav class="bg-slate-900/80 border-b border-slate-800 max-w-md mx-auto w-full flex text-xs font-semibold">
     <button onclick="switchTab('night')" id="tab-night" class="flex-1 py-3 text-center text-amber-400 border-b-2 border-amber-400 font-bold transition">🌙 שנת לילה</button>
     <button onclick="switchTab('day')" id="tab-day" class="flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent transition">☀️ תנומות יום</button>
-    <button onclick="switchTab('charts')" id="tab-charts" class="flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent transition">📊 גרף שינה</button>
-    <button onclick="switchTab('history')" id="tab-history" class="flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent transition">📜 יומן (<span id="logCount">0</span>)</button>
+    <button onclick="switchTab('charts')" id="tab-charts" class="flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent transition">📈 גרף שינה</button>
+    <button onclick="switchTab('history')" id="tab-history" class="flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent transition">📜 יומן שינה</button>
   </nav>
 
-  <!-- Main Content -->
+  <!-- Main Content Area -->
   <main class="max-w-md mx-auto w-full p-4 flex-1 space-y-4">
 
-    <!-- NIGHT VIEW -->
+    <!-- TAB 1: NIGHT VIEW -->
     <section id="view-night" class="space-y-4">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-md">
         <div class="flex justify-between items-center">
-          <h2 class="font-bold text-amber-400 text-base flex items-center gap-1.5">
-            <span>🌙</span> השכבת לילה ראשונית
-          </h2>
+          <h2 class="font-bold text-amber-400 text-base flex items-center gap-1.5"><span>🌙</span> השכבת לילה ראשונית</h2>
           <input type="date" id="nightDate" class="bg-slate-950 border border-slate-800 rounded-xl text-xs px-2.5 py-1.5 font-medium text-slate-200">
         </div>
 
-        <!-- Stage Selection (1-5) -->
         <div>
           <label class="text-[11px] text-slate-400 block mb-1">שלב בתהליך (הנחיית המטפלת)</label>
           <div class="grid grid-cols-5 gap-1.5" id="stageGroup">
@@ -63,15 +58,14 @@
         <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">שעת השכבה</label>
-            <input type="time" id="nightBedtime" value="19:30" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-center font-mono font-semibold text-amber-300">
+            <input type="time" id="nightBedtime" value="19:35" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-center font-mono font-semibold text-amber-300">
           </div>
           <div>
-            <label class="text-[11px] text-slate-400 block mb-1">כמה זמן עד שנרדם <span class="text-amber-400 font-bold">(בדקות בלבד)</span></label>
-            <input type="number" id="nightTimeToSleep" placeholder="לדוגמה: 10" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-center font-mono text-slate-100">
+            <label class="text-[11px] text-slate-400 block mb-1">כמה זמן עד שנרדם <span class="text-amber-400 font-bold">(בדקות)</span></label>
+            <input type="number" id="nightTimeToSleep" value="10" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-center font-mono text-slate-100">
           </div>
         </div>
 
-        <!-- Who put to bed -->
         <div>
           <label class="text-[11px] text-slate-400 block mb-1.5">מי הרדים?</label>
           <div class="grid grid-cols-3 gap-2" id="nightWhoGroup">
@@ -83,44 +77,48 @@
 
         <div>
           <label class="text-[11px] text-slate-400 block mb-1">איך נרדם / אופן הרדמה</label>
-          <textarea id="nightHow" rows="2" placeholder="מוצץ, החזקת יד, ליטוף, שכיבה על הצד..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500 resize-none"></textarea>
+          <textarea id="nightHow" rows="2" placeholder="מוצץ, החזקת יד, ליטוף..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 resize-none"></textarea>
         </div>
 
         <div>
           <label class="text-[11px] text-amber-400 font-medium block mb-1">📝 הערות מיוחדות על היום</label>
-          <textarea id="nightDailyNotes" rows="2" placeholder="הרגיש לא טוב, חוסר שנת צהריים בגן, חיסון..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500 resize-none"></textarea>
+          <textarea id="nightDailyNotes" rows="2" placeholder="הרגיש לא טוב, חוסר שנת צהריים בגן..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 resize-none"></textarea>
         </div>
 
-        <button onclick="saveNightSession()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3 rounded-xl text-sm shadow-lg shadow-amber-950/40 transition">💾 שמור השכבת לילה</button>
+        <div>
+          <label class="text-[11px] text-slate-400 block mb-1">שעת יקיצת בוקר סופית</label>
+          <input type="time" id="morningWake" value="07:40" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-center font-mono font-semibold text-emerald-400">
+        </div>
+
+        <button onclick="saveNightSession()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black py-3 rounded-xl text-sm shadow-lg transition">💾 שמור השכבת לילה</button>
       </div>
 
       <!-- Night Awakenings Logger -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-md">
-        <h3 class="font-bold text-amber-300 text-sm flex items-center gap-1.5">
-          <span>🔔</span> תיעוד יקיצת לילה
-        </h3>
-        
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-amber-300 text-sm flex items-center gap-1.5"><span>🔔</span> תיעוד יקיצת לילה (ללא הגבלה)</h3>
+        </div>
+
+        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs flex justify-between items-center">
+          <span class="text-slate-400">שיוך ליל הלילה:</span>
+          <select id="wakeTargetNight" onchange="updateWakeNumberBadge()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-amber-300 text-xs font-semibold"></select>
+        </div>
+
         <div class="grid grid-cols-2 gap-2.5">
           <div>
-            <label class="text-[11px] text-slate-400 block mb-1">מספר יקיצה</label>
-            <select id="wakeNumber" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs font-semibold text-amber-300">
-              <option value="1">יקיצה 1</option>
-              <option value="2">יקיצה 2</option>
-              <option value="3">יקיצה 3</option>
-              <option value="4">יקיצה 4</option>
-              <option value="5">יקיצה 5</option>
-            </select>
+            <label class="text-[11px] text-slate-400 block mb-1">מספר יקיצה בלילה זה</label>
+            <div id="wakeNumberDisplay" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-center text-xs font-bold text-amber-400 font-mono">יקיצה 1</div>
           </div>
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">שעת יקיצה</label>
-            <input type="time" id="wakeTime" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs font-mono font-semibold text-center text-slate-100">
+            <input type="time" id="wakeTime" value="20:35" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs font-mono font-semibold text-center text-slate-100">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2.5">
           <div>
-            <label class="text-[11px] text-slate-400 block mb-1">זמן עד שנרדם <span class="text-amber-400 font-bold">(בדקות)</span></label>
-            <input type="number" id="wakeTimeToSleep" placeholder="דקות" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-center text-slate-100">
+            <label class="text-[11px] text-slate-400 block mb-1">זמן עד חזרה לשינה <span class="text-amber-400 font-bold">(בדקות)</span></label>
+            <input type="number" id="wakeTimeToSleep" value="5" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-center text-slate-100">
           </div>
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">מי טיפל?</label>
@@ -133,21 +131,19 @@
         </div>
 
         <div>
-          <label class="text-[11px] text-slate-400 block mb-1">איך נרדם בחזרה</label>
-          <input type="text" id="wakeHow" placeholder="מוצץ, מלטף, יד..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-100">
+          <label class="text-[11px] text-slate-400 block mb-1">איך נרדם בחזרה / הערות</label>
+          <input type="text" id="wakeHow" placeholder="מוצץ, מגע, הנקה..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-100">
         </div>
 
-        <button onclick="saveWakeSession()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold py-2.5 rounded-xl text-xs border border-amber-500/20 transition">➕ שמור יקיצה</button>
+        <button onclick="saveWakeSession()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold py-2.5 rounded-xl text-xs border border-amber-500/20 transition">➕ הוסף יקיצה ללילה זה</button>
       </div>
     </section>
 
-    <!-- DAY VIEW -->
+    <!-- TAB 2: DAY VIEW -->
     <section id="view-day" class="hidden space-y-4">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-md">
         <div class="flex justify-between items-center">
-          <h2 class="font-bold text-sky-400 text-base flex items-center gap-1.5">
-            <span>☀️</span> תנומת יום
-          </h2>
+          <h2 class="font-bold text-sky-400 text-base flex items-center gap-1.5"><span>☀️</span> תנומת יום</h2>
           <input type="date" id="dayDate" class="bg-slate-950 border border-slate-800 rounded-xl text-xs px-2.5 py-1.5 font-medium text-slate-200">
         </div>
 
@@ -164,22 +160,23 @@
         <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">שעת השכבה</label>
-            <input type="time" id="dayBedtime" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-center font-mono font-semibold text-sky-300">
+            <input type="time" id="dayBedtime" value="11:00" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-center font-mono font-semibold text-sky-300">
           </div>
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">זמן עד שנרדם <span class="text-sky-400 font-bold">(בדקות)</span></label>
-            <input type="number" id="dayTimeToSleep" placeholder="דקות" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-center text-slate-100">
+            <input type="number" id="dayTimeToSleep" value="10" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-center text-slate-100">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">שעת יקיצה</label>
-            <input type="time" id="dayWakeTime" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-center font-mono text-slate-100">
+            <input type="time" id="dayWakeTime" value="12:30" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-center font-mono text-slate-100">
           </div>
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">מי הרדים?</label>
             <select id="dayWho" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200">
+              <option value="גננת">גננת</option>
               <option value="אמא">אמא</option>
               <option value="אבא">אבא</option>
               <option value="עצמאי">עצמאי</option>
@@ -189,70 +186,77 @@
 
         <div>
           <label class="text-[11px] text-slate-400 block mb-1">איך נרדם / הערות</label>
-          <textarea id="dayHow" rows="2" placeholder="בעגלה / מנשא / במיטה..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-sky-500 resize-none"></textarea>
+          <textarea id="dayHow" rows="2" placeholder="בעגלה / מנשא / בגן..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 resize-none"></textarea>
         </div>
 
-        <button onclick="saveDaySession()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-950 font-black py-3 rounded-xl text-sm shadow-lg transition">💾 שמור תנומת יום</button>
+        <button onclick="saveDaySession()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-slate-950 font-black py-3 rounded-xl text-sm shadow-lg transition">💾 שמור תנומת יום</button>
       </div>
     </section>
 
-    <!-- CHARTS VIEW -->
+    <!-- TAB 3: CHARTS VIEW -->
     <section id="view-charts" class="hidden space-y-4">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3.5">
         <div class="flex justify-between items-center">
-          <h2 class="font-bold text-amber-400 text-sm">📈 גרף רצף שינה ויקיצות</h2>
-          <div class="flex gap-1 text-[11px]">
-            <button onclick="updateChartFilter('daily')" id="filter-daily" class="px-2 py-1 bg-amber-500 text-slate-950 font-bold rounded-lg">יומי</button>
-            <button onclick="updateChartFilter('monthly')" id="filter-monthly" class="px-2 py-1 bg-slate-800 text-slate-300 rounded-lg">חודשי</button>
-            <button onclick="updateChartFilter('all')" id="filter-all" class="px-2 py-1 bg-slate-800 text-slate-300 rounded-lg">הכל</button>
-          </div>
+          <h2 class="font-bold text-amber-400 text-sm">📈 גרף רצף שינה וערות בלייב</h2>
+          <select id="chartNightSelect" onchange="renderSleepChart()" class="bg-slate-950 border border-slate-800 rounded-xl text-xs px-2.5 py-1 text-amber-300 font-semibold"></select>
         </div>
-        <div class="relative h-64 w-full">
+        <p class="text-[11px] text-slate-400">ציר עליון: <strong>ער (1)</strong> | ציר תחתון: <strong>ישן (0)</strong> לאורך הלילה:</p>
+        <div class="relative h-64 w-full bg-slate-950 rounded-xl p-2 border border-slate-800">
           <canvas id="sleepChart"></canvas>
         </div>
+        <div id="chartStatsSummary" class="grid grid-cols-3 gap-2 pt-2 text-center text-xs"></div>
       </div>
     </section>
 
-    <!-- HISTORY VIEW -->
+    <!-- TAB 4: JOURNAL VIEW -->
     <section id="view-history" class="hidden space-y-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 flex justify-between items-center">
+        <span class="text-xs font-bold text-slate-300">בחר יום להצגה:</span>
+        <select id="historyDateSelect" onchange="renderHistory()" class="bg-slate-950 border border-slate-800 rounded-xl text-xs px-3 py-1.5 font-semibold text-amber-400"></select>
+      </div>
       <div id="historyList" class="space-y-3"></div>
     </section>
 
   </main>
 
-  <script>
+    <script>
     let activeStage = 1;
     let activeWho = 'אבא';
 
-    // Baseline loaded from 28.09.26
-    const INITIAL_LOGS = [
+    // Pre-loaded complete dataset from 28.09.26
+    const INITIAL_NIGHTS = [
       {
-        id: 1001,
-        type: 'night_bedtime',
+        id: "night_2026-09-28",
         date: '2026-09-28',
         stage: 1,
-        time: '19:35',
+        bedtime: '19:35',
         timeToSleepMinutes: 10,
         who: 'אבא',
         how: 'עשר דקות שהוא החזיק לי את היד, יותר מאשר שאני ליטפתי אותו הוא תפס אותי, שכיבה על הצד',
-        dailyNotes: 'יומן לילה ראשון בתהליך'
-      },
-      {
-        id: 1002,
-        type: 'night_wake',
-        date: '2026-09-28',
-        wakeNum: 1,
-        time: '20:35',
-        timeToSleepMinutes: 1,
-        who: 'אבא',
-        how: 'מוצץ, ונתתי לו יד'
+        dailyNotes: 'יומן לילה ראשון בתהליך - הרגיש רגוע',
+        morningWake: '07:40',
+        wakes: [
+          { wakeNum: 1, wakeTime: '20:35', timeToSleepMinutes: 1, who: 'אבא', how: 'מוצץ, ונתתי לו יד' },
+          { wakeNum: 2, wakeTime: '21:35', timeToSleepMinutes: 1, who: 'אבא', how: 'מוצץ, ונתתי לו יד' },
+          { wakeNum: 3, wakeTime: '22:15', timeToSleepMinutes: 45, who: 'אמא', how: 'השכבה ומגע. קיבל תוך כדי הנקה, כי נראה שכאבה לו הבטן, ושלשל תוך כדי.' },
+          { wakeNum: 4, wakeTime: '02:25', timeToSleepMinutes: 5, who: 'אבא', how: 'מוצץ ומגע' },
+          { wakeNum: 5, wakeTime: '05:20', timeToSleepMinutes: 15, who: 'אבא', how: 'מוצץ ומגע' }
+        ]
       }
     ];
 
-    let sleepLogs = JSON.parse(localStorage.getItem('ivri_sleep_logs_v2')) || INITIAL_LOGS;
+    const INITIAL_DAY_NAPS = [];
+
+    let nightSessions = JSON.parse(localStorage.getItem('ivri_night_sessions_v3')) || INITIAL_NIGHTS;
+    let dayNaps = JSON.parse(localStorage.getItem('ivri_day_naps_v3')) || INITIAL_DAY_NAPS;
 
     document.getElementById('nightDate').valueAsDate = new Date();
     document.getElementById('dayDate').valueAsDate = new Date();
+
+    window.onload = () => {
+      populateNightDropdowns();
+      updateWakeNumberBadge();
+    };
 
     function switchTab(tabId) {
       document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
@@ -263,8 +267,10 @@
 
       document.getElementById(`view-${tabId}`).classList.remove('hidden');
       const activeBtn = document.getElementById(`tab-${tabId}`);
-      activeBtn.classList.add('text-amber-400', 'border-amber-400', 'font-bold');
-      activeBtn.classList.remove('text-slate-400', 'border-transparent');
+      if (activeBtn) {
+        activeBtn.classList.add('text-amber-400', 'border-amber-400', 'font-bold');
+        activeBtn.classList.remove('text-slate-400', 'border-transparent');
+      }
 
       if (tabId === 'history') renderHistory();
       if (tabId === 'charts') renderSleepChart();
@@ -296,128 +302,338 @@
       }
     }
 
+    function populateNightDropdowns() {
+      const wakeSelect = document.getElementById('wakeTargetNight');
+      const chartSelect = document.getElementById('chartNightSelect');
+      const historySelect = document.getElementById('historyDateSelect');
+
+      const optionsHtml = nightSessions.map(n => 
+        `<option value="${n.id}">${formatDateStr(n.date)} (השכבה ב-${n.bedtime})</option>`
+      ).join('');
+
+      wakeSelect.innerHTML = optionsHtml;
+      chartSelect.innerHTML = optionsHtml;
+
+      const historyDates = ['all', ...new Set([...nightSessions.map(n => n.date), ...dayNaps.map(d => d.date)])];
+      historySelect.innerHTML = historyDates.map(d => 
+        `<option value="${d}">${d === 'all' ? 'כל הימים (הכל)' : formatDateStr(d)}</option>`
+      ).join('');
+    }
+
+    function updateWakeNumberBadge() {
+      const targetId = document.getElementById('wakeTargetNight').value;
+      const night = nightSessions.find(n => n.id === targetId);
+      const nextNum = night ? (night.wakes.length + 1) : 1;
+      document.getElementById('wakeNumberDisplay').textContent = `יקיצה ${nextNum}`;
+    }
+
     function saveNightSession() {
-      const entry = {
-        id: Date.now(),
-        type: 'night_bedtime',
-        date: document.getElementById('nightDate').value,
+      const date = document.getElementById('nightDate').value;
+      const bedtime = document.getElementById('nightBedtime').value;
+      const timeToSleepMinutes = parseInt(document.getElementById('nightTimeToSleep').value) || 10;
+      const how = document.getElementById('nightHow').value;
+      const dailyNotes = document.getElementById('nightDailyNotes').value;
+      const morningWake = document.getElementById('morningWake').value || '07:40';
+
+      const nightId = "night_" + date;
+      const existingIdx = nightSessions.findIndex(n => n.id === nightId);
+
+      const newNight = {
+        id: nightId,
+        date,
         stage: activeStage,
-        time: document.getElementById('nightBedtime').value,
-        timeToSleepMinutes: parseInt(document.getElementById('nightTimeToSleep').value) || 10,
+        bedtime,
+        timeToSleepMinutes,
         who: activeWho,
-        how: document.getElementById('nightHow').value,
-        dailyNotes: document.getElementById('nightDailyNotes').value
+        how,
+        dailyNotes,
+        morningWake,
+        wakes: existingIdx !== -1 ? nightSessions[existingIdx].wakes : []
       };
 
-      sleepLogs.unshift(entry);
-      saveLogs();
+      if (existingIdx !== -1) {
+        nightSessions[existingIdx] = newNight;
+      } else {
+        nightSessions.unshift(newNight);
+      }
+
+      saveData();
+      populateNightDropdowns();
       alert('השכבת הלילה נשמרה בהצלחה!');
       switchTab('history');
     }
 
     function saveWakeSession() {
-      const entry = {
-        id: Date.now(),
-        type: 'night_wake',
-        date: document.getElementById('nightDate').value,
-        wakeNum: document.getElementById('wakeNumber').value,
-        time: document.getElementById('wakeTime').value,
-        timeToSleepMinutes: parseInt(document.getElementById('wakeTimeToSleep').value) || 5,
-        who: document.getElementById('wakeWho').value,
-        how: document.getElementById('wakeHow').value
+      const targetId = document.getElementById('wakeTargetNight').value;
+      const night = nightSessions.find(n => n.id === targetId);
+
+      if (!night) {
+        alert('אנא צור השכבת לילה ראשונית לפני הוספת יקיצות.');
+        return;
+      }
+
+      const wakeTime = document.getElementById('wakeTime').value;
+      const timeToSleepMinutes = parseInt(document.getElementById('wakeTimeToSleep').value) || 5;
+      const who = document.getElementById('wakeWho').value;
+      const how = document.getElementById('wakeHow').value;
+
+      const wakeEntry = {
+        wakeNum: night.wakes.length + 1,
+        wakeTime,
+        timeToSleepMinutes,
+        who,
+        how
       };
 
-      sleepLogs.unshift(entry);
-      saveLogs();
-      alert('יקיצת הלילה תועדה!');
+      night.wakes.push(wakeEntry);
+      saveData();
+      updateWakeNumberBadge();
+      alert(`יקיצה ${wakeEntry.wakeNum} נוספה בהצלחה!`);
       switchTab('history');
     }
 
     function saveDaySession() {
-      const entry = {
+      const date = document.getElementById('dayDate').value;
+      const napNum = document.getElementById('dayNapNum').value;
+      const bedtime = document.getElementById('dayBedtime').value;
+      const timeToSleepMinutes = parseInt(document.getElementById('dayTimeToSleep').value) || 10;
+      const wakeTime = document.getElementById('dayWakeTime').value;
+      const who = document.getElementById('dayWho').value;
+      const how = document.getElementById('dayHow').value;
+
+      const napEntry = {
         id: Date.now(),
-        type: 'day_nap',
-        date: document.getElementById('dayDate').value,
-        napNum: document.getElementById('dayNapNum').value,
-        time: document.getElementById('dayBedtime').value,
-        timeToSleepMinutes: parseInt(document.getElementById('dayTimeToSleep').value) || 10,
-        wakeTime: document.getElementById('dayWakeTime').value,
-        who: document.getElementById('dayWho').value,
-        how: document.getElementById('dayHow').value
+        date,
+        napNum,
+        bedtime,
+        timeToSleepMinutes,
+        wakeTime,
+        who,
+        how
       };
 
-      sleepLogs.unshift(entry);
-      saveLogs();
-      alert('תנומת היום נשמרה!');
+      dayNaps.unshift(napEntry);
+      saveData();
+      populateNightDropdowns();
+      alert('תנומת היום נשמרה בהצלחה!');
       switchTab('history');
     }
 
-    function saveLogs() {
-      localStorage.setItem('ivri_sleep_logs_v2', JSON.stringify(sleepLogs));
-      document.getElementById('logCount').textContent = sleepLogs.length;
+    function saveData() {
+      localStorage.setItem('ivri_night_sessions_v3', JSON.stringify(nightSessions));
+      localStorage.setItem('ivri_day_naps_v3', JSON.stringify(dayNaps));
     }
 
     function renderHistory() {
       const container = document.getElementById('historyList');
-      document.getElementById('logCount').textContent = sleepLogs.length;
+      const selectedDate = document.getElementById('historyDateSelect').value;
 
-      container.innerHTML = sleepLogs.map(l => `
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 space-y-1.5 shadow-sm">
-          <div class="flex justify-between items-center text-xs">
-            <span class="font-bold ${l.type === 'day_nap' ? 'text-sky-400' : 'text-amber-400'}">
-              ${l.type === 'night_bedtime' ? `🌙 השכבת לילה (שלב ${l.stage || 1})` : (l.type === 'night_wake' ? `🔔 יקיצה ${l.wakeNum}` : `☀️ תנומה ${l.napNum}`)}
-            </span>
-            <span class="text-slate-400 font-mono">${l.date} • ${l.time || ''}</span>
+      let filteredNights = nightSessions;
+      let filteredNaps = dayNaps;
+
+      if (selectedDate !== 'all') {
+        filteredNights = nightSessions.filter(n => n.date === selectedDate);
+        filteredNaps = dayNaps.filter(d => d.date === selectedDate);
+      }
+
+      if (filteredNights.length === 0 && filteredNaps.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-10 text-slate-500 bg-slate-900 rounded-2xl border border-slate-800">
+            <span class="text-3xl block mb-2">📋</span>
+            <p class="text-xs">אין תיעוד במאגר עבור תאריך זה.</p>
           </div>
-          <div class="text-xs text-slate-300">הרדים/טיפל: <strong>${l.who}</strong> | זמן להרדמה: ${l.timeToSleepMinutes} דקות</div>
-          ${l.how ? `<p class="text-[11px] text-slate-400 italic">💬 "${l.how}"</p>` : ''}
-          ${l.dailyNotes ? `<p class="text-[11px] text-amber-300/90 font-medium">📝 הערות יום: "${l.dailyNotes}"</p>` : ''}
-        </div>
-      `).join('');
+        `;
+        return;
+      }
+
+      let html = '';
+
+      filteredNights.forEach(n => {
+        let totalAwakeMinutes = n.timeToSleepMinutes;
+        n.wakes.forEach(w => totalAwakeMinutes += (w.timeToSleepMinutes || 0));
+
+        html += `
+          <div class="bg-slate-900 border border-amber-500/30 rounded-2xl p-4 space-y-3 shadow-md">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+              <div>
+                <h3 class="font-bold text-amber-400 text-sm">🌙 ליל ${formatDateStr(n.date)} (שלב ${n.stage})</h3>
+                <p class="text-[11px] text-slate-400">השכבה: <span class="font-mono text-slate-200">${n.bedtime}</span> | הרדים: <strong>${n.who}</strong></p>
+              </div>
+              <div class="text-left text-[11px] font-mono text-amber-300">
+                ${n.wakes.length} יקיצות<br>
+                ${totalAwakeMinutes} דק' ערות
+              </div>
+            </div>
+
+            <div class="text-xs text-slate-300 space-y-1">
+              <p>⏱️ <strong>זמן להרדמה:</strong> ${n.timeToSleepMinutes} דקות</p>
+              ${n.how ? `<p class="italic text-slate-400 bg-slate-950 p-2 rounded-lg">💬 "${n.how}"</p>` : ''}
+              ${n.dailyNotes ? `<p class="text-amber-300 bg-amber-500/10 p-2 rounded-lg">📝 <strong>הערות יום:</strong> "${n.dailyNotes}"</p>` : ''}
+              <p>☀️ <strong>יקיצת בוקר:</strong> ${n.morningWake || '07:40'}</p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-800">
+              <h4 class="text-xs font-bold text-amber-300">🔔 פירוט יקיצות בלילה:</h4>
+              ${n.wakes.length === 0 ? '<p class="text-[11px] text-slate-500 italic">ללא יקיצות רשומות</p>' : ''}
+              ${n.wakes.map(w => `
+                <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-2.5 text-xs space-y-1">
+                  <div class="flex justify-between font-bold text-amber-400">
+                    <span>יקיצה ${w.wakeNum} •${w.wakeTime}</span>
+                    <span>${w.timeToSleepMinutes} דקות ערות</span>
+                  </div>
+                  <div class="text-slate-300">טיפל: <strong>${w.who}</strong></div>${w.how ? `<div class="text-[11px] text-slate-400 italic">💬 "${w.how}"</div>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      filteredNaps.forEach(d => {
+        html += `
+          <div class="bg-slate-900 border border-sky-500/30 rounded-2xl p-4 space-y-2 shadow-md">
+            <div class="flex justify-between items-center">
+              <h3 class="font-bold text-sky-400 text-sm">☀️ תנומת יום ${d.napNum} (${formatDateStr(d.date)})</h3>
+              <span class="text-xs font-mono text-slate-400">${d.bedtime} - ${d.wakeTime || '?'}</span>
+            </div>
+            <div class="text-xs text-slate-300">הרדימה/טיפלה: <strong>${d.who}</strong> | זמן להרדמה: ${d.timeToSleepMinutes} דקות</div>
+            ${d.how ? `<p class="text-[11px] text-slate-400 italic bg-slate-950 p-2 rounded-lg">💬 "${d.how}"</p>` : ''}
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
     }
 
     let chartInstance = null;
     function renderSleepChart() {
+      const targetId = document.getElementById('chartNightSelect').value;
+      const night = nightSessions.find(n => n.id === targetId);
       const ctx = document.getElementById('sleepChart').getContext('2d');
+
+      if (!night) return;
+
       if (chartInstance) chartInstance.destroy();
 
-      const dates = [...new Set(sleepLogs.map(l => l.date))].reverse();
-      const avgSleepMinutes = dates.map(d => {
-        const logs = sleepLogs.filter(l => l.date === d && l.type === 'night_bedtime');
-        return logs.length > 0 ? logs[0].timeToSleepMinutes : 0;
+      const labels = [];
+      const dataPoints = [];
+
+      labels.push(night.bedtime);
+      dataPoints.push(1);
+
+      const fallAsleepTime = addMinutesToTime(night.bedtime, night.timeToSleepMinutes);
+      labels.push(fallAsleepTime);
+      dataPoints.push(0);
+
+      let totalWakeMinutes = night.timeToSleepMinutes;
+
+      night.wakes.forEach(w => {
+        labels.push(w.wakeTime);
+        dataPoints.push(1);
+
+        const backToSleepTime = addMinutesToTime(w.wakeTime, w.timeToSleepMinutes);
+        labels.push(backToSleepTime);
+        dataPoints.push(0);
+
+        totalWakeMinutes += w.timeToSleepMinutes;
       });
 
+      const morningTime = night.morningWake || '07:40';
+      labels.push(morningTime);
+      dataPoints.push(1);
+
       chartInstance = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-          labels: dates,
+          labels: labels,
           datasets: [{
-            label: 'זמן הרדמה בדקות (לילה)',
-            data: avgSleepMinutes,
-            backgroundColor: '#f59e0b',
-            borderRadius: 8
+            label: 'מצב שינה / ערות',
+            data: dataPoints,
+            stepped: true,
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.15)',
+            borderWidth: 3,
+            fill: true,
+            pointBackgroundColor: '#f59e0b',
+            pointRadius: 5
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: '#cbd5e1' } } },
           scales: {
-            x: { ticks: { color: '#94a3b8' } },
-            y: { ticks: { color: '#94a3b8' }, beginAtZero: true }
+            y: {
+              min: -0.2,
+              max: 1.2,
+              ticks: {
+                stepSize: 1,
+                color: '#cbd5e1',
+                callback: function(val) {
+                  if (val === 1) return 'ער 🔔';
+                  if (val === 0) return 'ישן 😴';
+                  return '';
+                }
+              },
+              grid: { color: '#334155' }
+            },
+            x: {
+              ticks: { color: '#cbd5e1' },
+              grid: { color: '#1e293b' }
+            }
+          },
+          plugins: {
+            legend: { display: false }
           }
         }
       });
+
+      document.getElementById('chartStatsSummary').innerHTML = `
+        <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+          <span class="text-slate-400 block text-[10px]">שעת השכבה</span>
+          <span class="font-bold text-amber-400 font-mono">${night.bedtime}</span>
+        </div>
+        <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+          <span class="text-slate-400 block text-[10px]">מספר יקיצות</span>
+          <span class="font-bold text-amber-400 font-mono">${night.wakes.length}</span>
+        </div>
+        <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+          <span class="text-slate-400 block text-[10px]">סה"כ ערות</span>
+          <span class="font-bold text-amber-400 font-mono">${totalWakeMinutes} דק'</span>
+        </div>
+      `;
+    }
+
+    function addMinutesToTime(timeStr, mins) {
+      if (!timeStr) return '00:00';
+      const parts = timeStr.split(':');
+      let h = parseInt(parts[0]);
+      let m = parseInt(parts[1]) + mins;
+      h = (h + Math.floor(m / 60)) % 24;
+      m = m % 60;
+      return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+    }
+
+    function formatDateStr(dStr) {
+      if (!dStr) return '';
+      const parts = dStr.split('-');
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
 
     function exportCSV() {
-      let csv = "data:text/csv;charset=utf-8,\uFEFFתאריך,סוג,שלב,שעה,מי הרדים,זמן להרדמה (בדקות),הערות\n";
-      sleepLogs.forEach(l => {
-        csv += `"${l.date}","${l.type}","${l.stage || ''}","${l.time || ''}","${l.who}","${l.timeToSleepMinutes}","${l.how || l.dailyNotes || ''}"\n`;
+      let csv = "data:text/csv;charset=utf-8,\uFEFFתאריך,סוג אירוע,שלב,שעה,מי הרדים/טיפל,זמן להרדמה (בדקות),הערות\n";
+      nightSessions.forEach(n => {
+        csv += `"${n.date}","השכבת לילה","${n.stage}","${n.bedtime}","${n.who}","${n.timeToSleepMinutes}","${n.how || ''} | ${n.dailyNotes || ''}"\n`;
+        n.wakes.forEach(w => {
+          csv += `"${n.date}","יקיצה ${w.wakeNum}","${n.stage}","${w.wakeTime}","${w.who}","${w.timeToSleepMinutes}","${w.how || ''}"\n`;
+        });
       });
+      dayNaps.forEach(d => {
+        csv += `"${d.date}","תנומת יום ${d.napNum}","","${d.bedtime}","${d.who}","${d.timeToSleepMinutes}","${d.how || ''}"\n`;
+      });
+
       const link = document.createElement("a");
       link.href = encodeURI(csv);
-      link.download = "ivri_sleep_log.csv";
+      link.download = "ivri_sleep_journal.csv";
       link.click();
     }
   </script>
