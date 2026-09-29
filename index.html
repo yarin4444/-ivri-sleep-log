@@ -4,12 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>יומן שינה – עברי 👶</title>
-  <!-- Tailwind CSS & Chart.js -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Firebase Realtime Database SDK for Cross-Device Live Sync -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Heebo', sans-serif; background-color: #0b0f19; }
@@ -35,11 +31,11 @@
         </div>
       </div>
       <div class="flex items-center gap-1.5">
-        <button onclick="openSyncModal()" title="סנכרון בזמן אמת" class="text-xs bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 px-2.5 py-1.5 rounded-xl hover:bg-indigo-500/25 transition font-semibold flex items-center gap-1">
-          <span id="syncStatusDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <button onclick="openSyncModal()" title="הגדרות סנכרון" class="text-xs bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 px-2.5 py-1.5 rounded-xl hover:bg-indigo-500/25 transition font-semibold flex items-center gap-1.5">
+          <span id="syncDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>🔄 סנכרון</span>
         </button>
-        <button onclick="exportCSV()" class="text-xs bg-amber-500/10 text-amber-300 border border-amber-500/30 px-2.5 py-1.5 rounded-xl hover:bg-amber-500/20 transition font-bold">
+        <button onclick="exportCSV()" class="text-xs bg-amber-500/10 text-amber-300 border border-amber-500/30 px-2 py-1.5 rounded-xl hover:bg-amber-500/20 transition font-bold">
           📥 CSV
         </button>
       </div>
@@ -60,7 +56,7 @@
     <!-- TAB 1: NIGHT VIEW -->
     <section id="view-night" class="space-y-4 animate-fade">
       
-      <!-- 1. Initial Bedtime Form -->
+      <!-- Bedtime Form -->
       <div class="glass-card rounded-2xl p-4 space-y-3.5 shadow-xl">
         <div class="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
           <h2 class="font-bold text-amber-300 text-sm flex items-center gap-1.5">
@@ -102,7 +98,7 @@
 
         <div>
           <label class="text-[11px] text-slate-400 block mb-1">אופן הרדמה / איך נרדם?</label>
-          <textarea id="nightHow" rows="2" placeholder="מוצץ, החזקת יד, ליטוף, שכיבה על הצד..." class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 resize-none focus:outline-none focus:border-amber-400/60"></textarea>
+          <textarea id="nightHow" rows="2" placeholder="מוצץ, החזקת יד, ליטוף..." class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 resize-none focus:outline-none focus:border-amber-400/60"></textarea>
         </div>
 
         <div>
@@ -115,7 +111,7 @@
         </button>
       </div>
 
-      <!-- 2. Night Awakenings Logger -->
+      <!-- Awakenings Logger -->
       <div class="glass-card rounded-2xl p-4 space-y-3.5 shadow-xl">
         <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
           <h3 class="font-bold text-purple-300 text-xs flex items-center gap-1.5">
@@ -135,7 +131,7 @@
             <input type="time" id="wakeTime" value="20:30" class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-2 text-xs font-mono font-bold text-center text-slate-100">
           </div>
           <div>
-            <label class="text-[11px] text-slate-400 block mb-1">זמן ערות <span class="text-purple-300 font-bold">(בדקות)</span></label>
+            <label class="text-[11px] text-slate-400 block mb-1">זמן ערות <span class="text-purple-300 font-bold">(דקות)</span></label>
             <input type="number" id="wakeTimeToSleep" value="5" class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-2 text-xs text-center font-mono text-slate-100">
           </div>
         </div>
@@ -160,7 +156,7 @@
         </button>
       </div>
 
-      <!-- 3. Separate Morning Wake-Up Section -->
+      <!-- Separate Morning Wake Section -->
       <div class="glass-card rounded-2xl p-4 space-y-3 shadow-xl">
         <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
           <h3 class="font-bold text-emerald-400 text-xs flex items-center gap-1.5">
@@ -240,7 +236,7 @@
 
         <div>
           <label class="text-[11px] text-slate-400 block mb-1">איך נרדם / הערות</label>
-          <textarea id="dayHow" rows="2" placeholder="בעגלה / מנשא / בגן / במיטה..." class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 resize-none focus:outline-none focus:border-sky-400/60"></textarea>
+          <textarea id="dayHow" rows="2" placeholder="בעגלה / מנשא / בגן..." class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 resize-none focus:outline-none focus:border-sky-400/60"></textarea>
         </div>
 
         <button onclick="saveDaySession()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-slate-950 font-extrabold py-3 rounded-xl text-xs shadow-lg transition">
@@ -280,66 +276,53 @@
     <div id="editModalContent" class="space-y-3 text-xs"></div>
   </dialog>
 
-  <!-- Realtime Sync Modal -->
+  <!-- Realtime Sync Setup Modal -->
   <dialog id="syncModal" class="bg-slate-900 text-slate-100 p-5 rounded-3xl border border-indigo-500/40 shadow-2xl max-w-md w-11/12 backdrop:bg-black/70">
     <div class="space-y-3.5 text-xs">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
         <h3 class="font-bold text-indigo-300 text-sm flex items-center gap-1.5"><span>🔄</span> סנכרון משפחתי בזמן אמת</h3>
         <button onclick="closeSyncModal()" class="text-slate-400 hover:text-white font-bold text-base">✕</button>
       </div>
+      
       <p class="text-slate-300 leading-relaxed">
-        כדי שכל בני המשפחה (אמא, אבא וכו') יוכלו לראות עדכונים **בזמן אמת בלייב**, הזינו קוד משפחתי משותף:
+        כדי שכל היקיצות שאתה מכניס יתעדכנו <strong>מיידית גם בטלפון של אשתך</strong>, לחץ על הכפתור למטה ושלח לה את הקישור הישיר בווטסאפ:
       </p>
-      <div>
-        <label class="block text-slate-400 mb-1">קוד משפחה משותף (Family Key):</label>
-        <input type="text" id="familyKeyInput" placeholder="למשל: ivri-family-2026" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-amber-300 font-mono font-bold text-center">
-      </div>
-      <div class="flex gap-2 pt-1">
-        <button onclick="saveFamilySyncKey()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl transition">
-          💾 הפעל סנכרון בלייב
+
+      <div class="bg-indigo-950/60 p-3 rounded-2xl border border-indigo-500/30 space-y-2">
+        <div class="flex justify-between items-center">
+          <span class="text-slate-400">קוד חדר משפחתי:</span>
+          <span id="currentFamilyKeyDisplay" class="font-mono font-bold text-amber-300 text-xs bg-slate-950 px-2 py-1 rounded-lg"></span>
+        </div>
+        <button onclick="copyDirectSyncLink()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-bold py-2.5 rounded-xl shadow-lg transition flex items-center justify-center gap-1.5">
+          <span>🔗</span> העתק קישור סנכרון ישיר לאשה
         </button>
+      </div>
+
+      <div class="border-t border-slate-800 pt-2 space-y-2">
+        <label class="block text-slate-400">שינוי ידני של קוד החדר המשפחתי:</label>
+        <div class="flex gap-2">
+          <input type="text" id="familyKeyInput" placeholder="למשל: hausler-family" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl p-2 text-amber-300 font-mono font-bold text-center">
+          <button onclick="applyCustomFamilyKey()" class="bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-xl font-bold text-indigo-300">עדכן</button>
+        </div>
       </div>
     </div>
   </dialog>
 
-    <script>
+    <!-- JavaScript App Logic -->
+  <script>
     let activeStage = 1;
     let activeWho = 'אבא';
 
-    // Default Baseline Dataset
-    const DEFAULT_NIGHTS = [
-      {
-        id: "night_2026-09-28",
-        date: '2026-09-28',
-        stage: 1,
-        bedtime: '19:35',
-        timeToSleepMinutes: 10,
-        who: 'אבא',
-        how: 'עשר דקות שהוא החזיק לי את היד',
-        dailyNotes: 'יומן לילה ראשון בתהליך - הרגיש רגוע',
-        morningWake: '07:40',
-        morningNotes: 'קם בחיוך ובמצב רוח טוב',
-        wakes: [
-          { id: 'w1', wakeNum: 1, wakeTime: '20:35', timeToSleepMinutes: 1, who: 'אבא', how: 'מוצץ, ונתתי לו יד' },
-          { id: 'w2', wakeNum: 2, wakeTime: '21:35', timeToSleepMinutes: 1, who: 'אבא', how: 'מוצץ, ונתתי לו יד' },
-          { id: 'w3', wakeNum: 3, wakeTime: '22:15', timeToSleepMinutes: 45, who: 'אמא', how: 'השכבה ומגע. קיבל תוך כדי הנקה' },
-          { id: 'w4', wakeNum: 4, wakeTime: '02:25', timeToSleepMinutes: 5, who: 'אבא', how: 'מוצץ ומגע' },
-          { id: 'w5', wakeNum: 5, wakeTime: '05:20', timeToSleepMinutes: 15, who: 'אבא', how: 'מוצץ ומגע' }
-        ]
-      }
-    ];
+    const MAIN_NIGHTS_KEY = 'ivri_nights_master_v11';
+    const MAIN_DAYS_KEY = 'ivri_days_master_v11';
 
-    const MAIN_NIGHTS_KEY = 'ivri_nights_master_v10';
-    const MAIN_DAYS_KEY = 'ivri_days_master_v10';
-
-    // 1. History Migration Logic - Merges all past LocalStorage keys so no history is lost!
+    // 1. History Preserving Migration
     function loadAndMigrateData() {
       let savedNights = localStorage.getItem(MAIN_NIGHTS_KEY);
       let nightList = savedNights ? JSON.parse(savedNights) : [];
 
       if (nightList.length === 0) {
-        const oldKeys = ['ivri_night_sessions_v6', 'ivri_night_sessions_v5', 'ivri_night_sessions_v4', 'ivri_night_sessions_v3', 'ivri_night_sessions'];
-        oldKeys.forEach(k => {
+        ['ivri_nights_master_v10', 'ivri_night_sessions_v6', 'ivri_night_sessions_v5', 'ivri_night_sessions_v4', 'ivri_night_sessions_v3', 'ivri_night_sessions'].forEach(k => {
           let oldData = localStorage.getItem(k);
           if (oldData) {
             try {
@@ -354,12 +337,10 @@
         });
       }
 
-      if (nightList.length === 0) nightList = DEFAULT_NIGHTS;
-
       let savedDays = localStorage.getItem(MAIN_DAYS_KEY);
       let dayList = savedDays ? JSON.parse(savedDays) : [];
       if (dayList.length === 0) {
-        ['ivri_day_naps_v6', 'ivri_day_naps_v5', 'ivri_day_naps_v4', 'ivri_day_naps_v3'].forEach(k => {
+        ['ivri_days_master_v10', 'ivri_day_naps_v6', 'ivri_day_naps_v5', 'ivri_day_naps_v4', 'ivri_day_naps_v3'].forEach(k => {
           let oldData = localStorage.getItem(k);
           if (oldData) {
             try {
@@ -381,47 +362,64 @@
     let nightSessions = initialData.nights;
     let dayNaps = initialData.days;
 
-    // Firebase Live Cross-Device Sync Setup
-    let firebaseDb = null;
-    let familySyncKey = localStorage.getItem('ivri_family_sync_key') || 'ivri-family-default';
+    // 2. Direct Cloud Storage API Engine
+    let familySyncKey = localStorage.getItem('ivri_family_sync_key') || 'ivri-hausler-family';
 
-    function initFirebaseSync() {
-      try {
-        if (!firebase.apps.length) {
-          firebase.initializeApp({
-            databaseURL: "https://ivri-sleep-journal-default-rtdb.firebaseio.com"
-          });
-        }
-        firebaseDb = firebase.database();
-        listenToFirebaseLiveUpdates();
-      } catch(e) {
-        console.log("LocalStorage fallback active");
-      }
+    // Parse URL query parameter for direct link synchronization (e.g. ?familyKey=XYZ)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('familyKey')) {
+      familySyncKey = urlParams.get('familyKey');
+      localStorage.setItem('ivri_family_sync_key', familySyncKey);
     }
 
-    function listenToFirebaseLiveUpdates() {
-      if (!firebaseDb) return;
-      firebaseDb.ref('families/' + familySyncKey).on('value', snapshot => {
-        const val = snapshot.val();
-        if (val) {
-          if (val.nights) nightSessions = val.nights;
-          if (val.days) dayNaps = val.days;
-          saveLocalOnly();
-          populateNightDropdowns();
-          if (!document.getElementById('view-history').classList.contains('hidden')) renderHistory();
-          if (!document.getElementById('view-charts').classList.contains('hidden')) renderSleepChart();
-        }
-      });
-    }
+    const CLOUD_SYNC_ENDPOINT = 'https://ivri-sleep-journal-default-rtdb.europe-west1.firebasedatabase.app/families/';
 
-    function syncToCloudAndLocal() {
+    async function syncToCloud() {
       saveLocalOnly();
-      if (firebaseDb) {
-        firebaseDb.ref('families/' + familySyncKey).set({
+      updateSyncDot(true);
+      try {
+        const payload = {
           nights: nightSessions,
           days: dayNaps,
           lastUpdated: Date.now()
+        };
+        await fetch(`${CLOUD_SYNC_ENDPOINT}${familySyncKey}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
         });
+      } catch(e) {
+        console.log('Cloud push offline');
+        updateSyncDot(false);
+      }
+    }
+
+    async function fetchFromCloudAndMerge() {
+      try {
+        const res = await fetch(`${CLOUD_SYNC_ENDPOINT}${familySyncKey}.json`);
+        if (res.ok) {
+          const cloudData = await res.json();
+          if (cloudData && (cloudData.nights || cloudData.days)) {
+            if (cloudData.nights) nightSessions = cloudData.nights;
+            if (cloudData.days) dayNaps = cloudData.days;
+            saveLocalOnly();
+            populateNightDropdowns();
+            if (!document.getElementById('view-history').classList.contains('hidden')) renderHistory();
+            if (!document.getElementById('view-charts').classList.contains('hidden')) renderSleepChart();
+            updateSyncDot(true);
+          }
+        }
+      } catch(e) {
+        updateSyncDot(false);
+      }
+    }
+
+    function updateSyncDot(isOnline) {
+      const dot = document.getElementById('syncDot');
+      if (dot) {
+        dot.className = isOnline 
+          ? "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" 
+          : "w-2.5 h-2.5 rounded-full bg-amber-500";
       }
     }
 
@@ -432,15 +430,28 @@
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    window.onload = () => {
+    window.onload = async () => {
       document.getElementById('nightDate').value = todayStr;
       document.getElementById('dayDate').value = todayStr;
+      document.getElementById('currentFamilyKeyDisplay').textContent = familySyncKey;
       document.getElementById('familyKeyInput').value = familySyncKey;
-      
+
+      // Cloud First Pull before local initialization
+      await fetchFromCloudAndMerge();
+
       ensureNightSessionForDate(todayStr);
       populateNightDropdowns("night_" + todayStr);
-      initFirebaseSync();
+
+      // Auto-poll cloud every 10 seconds for real-time live updates
+      setInterval(fetchFromCloudAndMerge, 10000);
     };
+
+    // Auto-refresh when bringing phone to foreground
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        fetchFromCloudAndMerge();
+      }
+    });
 
     function ensureNightSessionForDate(dateStr) {
       const nightId = "night_" + dateStr;
@@ -458,7 +469,7 @@
           morningNotes: '',
           wakes: []
         });
-        syncToCloudAndLocal();
+        syncToCloud();
       }
     }
 
@@ -583,9 +594,9 @@
         night.dailyNotes = dailyNotes;
       }
 
-      syncToCloudAndLocal();
+      syncToCloud();
       populateNightDropdowns(nightId);
-      alert('השכבת הלילה נשמרה בהצלחה!');
+      alert('השכבת הלילה נשמרה וסונכרנה בהצלחה!');
       switchTab('history');
     }
 
@@ -605,13 +616,12 @@
       };
 
       night.wakes.push(wakeEntry);
-      syncToCloudAndLocal();
+      syncToCloud();
       updateWakeNumberBadge();
-      alert('יקיצה ' + wakeEntry.wakeNum + ' נוספה בהצלחה!');
+      alert('יקיצה ' + wakeEntry.wakeNum + ' נרשמה וסונכרנה בלייב!');
       switchTab('history');
     }
 
-    // Dedicated Morning Wake Update
     function saveMorningWake() {
       const targetId = document.getElementById('morningTargetNight').value;
       const night = nightSessions.find(n => n.id === targetId);
@@ -621,8 +631,8 @@
       night.morningWake = document.getElementById('morningWakeTime').value;
       night.morningNotes = document.getElementById('morningWakeNotes').value;
 
-      syncToCloudAndLocal();
-      alert('יקיצת הבוקר הסופית עודכנה לליל ה-' + formatDateStr(night.date));
+      syncToCloud();
+      alert('יקיצת הבוקר הסופית עודכנה וסונכרנה ליל ה-' + formatDateStr(night.date));
       switchTab('history');
     }
 
@@ -639,13 +649,13 @@
       };
 
       dayNaps.unshift(napEntry);
-      syncToCloudAndLocal();
+      syncToCloud();
       populateNightDropdowns();
       alert('תנומת היום נשמרה בהצלחה!');
       switchTab('history');
     }
 
-    // 2. Full Editing & Deleting Capabilities
+    // Modal Edit Functions
     function openEditNight(nightId) {
       const night = nightSessions.find(n => n.id === nightId);
       if (!night) return;
@@ -670,7 +680,7 @@
           <div><label class="text-slate-400">שעת יקיצת בוקר:</label><input type="time" id="editMorningWake" value="${night.morningWake||'07:15'}" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 font-mono text-emerald-400"></div>
         </div>
         <div class="flex gap-2 pt-2">
-          <button onclick="saveEditNight('${nightId}')" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded-xl">💾 שמור שינויים</button>
+          <button onclick="saveEditNight('${nightId}')" class="flex-1 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold py-2 rounded-xl">💾 שמור שינויים</button>
           <button onclick="closeModal()" class="bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-xl text-slate-300">ביטול</button>
         </div>
       `;
@@ -686,7 +696,7 @@
         night.how = document.getElementById('editHow').value;
         night.dailyNotes = document.getElementById('editDailyNotes').value;
         night.morningWake = document.getElementById('editMorningWake').value;
-        syncToCloudAndLocal();
+        syncToCloud();
         renderHistory();
       }
       closeModal();
@@ -695,7 +705,7 @@
     function deleteNightSession(nightId) {
       if (confirm('האם למחוק לחלוטין את לילה זה מיומן השינה?')) {
         nightSessions = nightSessions.filter(n => n.id !== nightId);
-        syncToCloudAndLocal();
+        syncToCloud();
         populateNightDropdowns();
         renderHistory();
       }
@@ -706,7 +716,7 @@
       if (night && confirm('למחוק יקיצה זו?')) {
         night.wakes.splice(wakeIdx, 1);
         night.wakes.forEach((w, i) => w.wakeNum = i + 1);
-        syncToCloudAndLocal();
+        syncToCloud();
         renderHistory();
       }
     }
@@ -714,7 +724,7 @@
     function deleteDayNap(napId) {
       if (confirm('למחוק תנומת יום זו?')) {
         dayNaps = dayNaps.filter(d => d.id !== napId);
-        syncToCloudAndLocal();
+        syncToCloud();
         renderHistory();
       }
     }
@@ -731,14 +741,24 @@
       document.getElementById('syncModal').close();
     }
 
-    function saveFamilySyncKey() {
+    function copyDirectSyncLink() {
+      const cleanUrl = window.location.origin + window.location.pathname;
+      const shareUrl = `${cleanUrl}?familyKey=${encodeURIComponent(familySyncKey)}`;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert('הקישור הועתק בהצלחה! שלח אותו בווטסאפ לאשתך, ובלחיצה עליו היא תתחבר מיידית לסנכרון.');
+      }).catch(() => {
+        prompt('העתק את הקישור ושלח לאשתך:', shareUrl);
+      });
+    }
+
+    function applyCustomFamilyKey() {
       const key = document.getElementById('familyKeyInput').value.trim();
       if (key) {
         familySyncKey = key;
         localStorage.setItem('ivri_family_sync_key', key);
-        initFirebaseSync();
-        closeSyncModal();
-        alert('הסנכרון בזמן אמת הופעל עם קוד משפחה: ' + key);
+        document.getElementById('currentFamilyKeyDisplay').textContent = key;
+        fetchFromCloudAndMerge();
+        alert('קוד החדר עודכן ל: ' + key);
       }
     }
 
