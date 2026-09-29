@@ -21,7 +21,9 @@
           <p class="text-[11px] text-slate-400">תהליך ייעוץ שינה</p>
         </div>
       </div>
-      <button onclick="exportCSV()" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1.5 rounded-xl hover:bg-amber-500/20 transition font-bold">📥 ייצוא CSV</button>
+      <button onclick="exportCSV()" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1.5 rounded-xl hover:bg-amber-500/20 transition font-bold flex items-center gap-1">
+        <span>📥</span> ייצוא CSV
+      </button>
     </div>
   </header>
 
@@ -38,12 +40,17 @@
 
     <!-- TAB 1: NIGHT VIEW -->
     <section id="view-night" class="space-y-4">
+      
+      <!-- Bedtime Form -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-md">
         <div class="flex justify-between items-center">
-          <h2 class="font-bold text-amber-400 text-base flex items-center gap-1.5"><span>🌙</span> השכבת לילה ראשונית</h2>
+          <h2 class="font-bold text-amber-400 text-base flex items-center gap-1.5">
+            <span>🌙</span> השכבת לילה ראשונית
+          </h2>
           <input type="date" id="nightDate" class="bg-slate-950 border border-slate-800 rounded-xl text-xs px-2.5 py-1.5 font-medium text-slate-200">
         </div>
 
+        <!-- Stage Selection -->
         <div>
           <label class="text-[11px] text-slate-400 block mb-1">שלב בתהליך (הנחיית המטפלת)</label>
           <div class="grid grid-cols-5 gap-1.5" id="stageGroup">
@@ -58,14 +65,15 @@
         <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">שעת השכבה</label>
-            <input type="time" id="nightBedtime" value="19:35" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-center font-mono font-semibold text-amber-300">
+            <input type="time" id="nightBedtime" value="19:30" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-center font-mono font-semibold text-amber-300">
           </div>
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">כמה זמן עד שנרדם <span class="text-amber-400 font-bold">(בדקות)</span></label>
-            <input type="number" id="nightTimeToSleep" value="10" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-center font-mono text-slate-100">
+            <input type="number" id="nightTimeToSleep" placeholder="10" value="10" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-center font-mono text-slate-100">
           </div>
         </div>
 
+        <!-- Who put to bed -->
         <div>
           <label class="text-[11px] text-slate-400 block mb-1.5">מי הרדים?</label>
           <div class="grid grid-cols-3 gap-2" id="nightWhoGroup">
@@ -77,41 +85,46 @@
 
         <div>
           <label class="text-[11px] text-slate-400 block mb-1">איך נרדם / אופן הרדמה</label>
-          <textarea id="nightHow" rows="2" placeholder="מוצץ, החזקת יד, ליטוף..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 resize-none"></textarea>
+          <textarea id="nightHow" rows="2" placeholder="מוצץ, החזקת יד, ליטוף, שכיבה על הצד..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500 resize-none"></textarea>
         </div>
 
         <div>
           <label class="text-[11px] text-amber-400 font-medium block mb-1">📝 הערות מיוחדות על היום</label>
-          <textarea id="nightDailyNotes" rows="2" placeholder="הרגיש לא טוב, חוסר שנת צהריים בגן..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 resize-none"></textarea>
+          <textarea id="nightDailyNotes" rows="2" placeholder="הרגיש לא טוב, חוסר שנת צהריים בגן, חיסון..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500 resize-none"></textarea>
         </div>
 
         <div>
           <label class="text-[11px] text-slate-400 block mb-1">שעת יקיצת בוקר סופית</label>
-          <input type="time" id="morningWake" value="07:40" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-center font-mono font-semibold text-emerald-400">
+          <input type="time" id="morningWake" value="07:30" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-center font-mono font-semibold text-emerald-400">
         </div>
 
-        <button onclick="saveNightSession()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black py-3 rounded-xl text-sm shadow-lg transition">💾 שמור השכבת לילה</button>
+        <button onclick="saveNightSession()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3 rounded-xl text-sm shadow-lg shadow-amber-950/40 transition">💾 שמור השכבת לילה</button>
       </div>
 
       <!-- Night Awakenings Logger -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-md">
         <div class="flex justify-between items-center">
-          <h3 class="font-bold text-amber-300 text-sm flex items-center gap-1.5"><span>🔔</span> תיעוד יקיצת לילה (ללא הגבלה)</h3>
+          <h3 class="font-bold text-amber-300 text-sm flex items-center gap-1.5">
+            <span>🔔</span> תיעוד יקיצת לילה (ללא הגבלה)
+          </h3>
         </div>
 
         <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs flex justify-between items-center">
           <span class="text-slate-400">שיוך ליל הלילה:</span>
-          <select id="wakeTargetNight" onchange="updateWakeNumberBadge()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-amber-300 text-xs font-semibold"></select>
+          <select id="wakeTargetNight" onchange="updateWakeNumberBadge()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-amber-300 text-xs font-semibold">
+          </select>
         </div>
 
         <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">מספר יקיצה בלילה זה</label>
-            <div id="wakeNumberDisplay" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-center text-xs font-bold text-amber-400 font-mono">יקיצה 1</div>
+            <div id="wakeNumberDisplay" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-center text-xs font-bold text-amber-400 font-mono">
+              יקיצה 1
+            </div>
           </div>
           <div>
             <label class="text-[11px] text-slate-400 block mb-1">שעת יקיצה</label>
-            <input type="time" id="wakeTime" value="20:35" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs font-mono font-semibold text-center text-slate-100">
+            <input type="time" id="wakeTime" value="20:30" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs font-mono font-semibold text-center text-slate-100">
           </div>
         </div>
 
@@ -143,7 +156,9 @@
     <section id="view-day" class="hidden space-y-4">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-md">
         <div class="flex justify-between items-center">
-          <h2 class="font-bold text-sky-400 text-base flex items-center gap-1.5"><span>☀️</span> תנומת יום</h2>
+          <h2 class="font-bold text-sky-400 text-base flex items-center gap-1.5">
+            <span>☀️</span> תנומת יום
+          </h2>
           <input type="date" id="dayDate" class="bg-slate-950 border border-slate-800 rounded-xl text-xs px-2.5 py-1.5 font-medium text-slate-200">
         </div>
 
@@ -186,7 +201,7 @@
 
         <div>
           <label class="text-[11px] text-slate-400 block mb-1">איך נרדם / הערות</label>
-          <textarea id="dayHow" rows="2" placeholder="בעגלה / מנשא / בגן..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 resize-none"></textarea>
+          <textarea id="dayHow" rows="2" placeholder="בעגלה / מנשא / בגן / במיטה..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-sky-500 resize-none"></textarea>
         </div>
 
         <button onclick="saveDaySession()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 text-slate-950 font-black py-3 rounded-xl text-sm shadow-lg transition">💾 שמור תנומת יום</button>
@@ -200,10 +215,13 @@
           <h2 class="font-bold text-amber-400 text-sm">📈 גרף רצף שינה וערות בלייב</h2>
           <select id="chartNightSelect" onchange="renderSleepChart()" class="bg-slate-950 border border-slate-800 rounded-xl text-xs px-2.5 py-1 text-amber-300 font-semibold"></select>
         </div>
+
         <p class="text-[11px] text-slate-400">ציר עליון: <strong>ער (1)</strong> | ציר תחתון: <strong>ישן (0)</strong> לאורך הלילה:</p>
+
         <div class="relative h-64 w-full bg-slate-950 rounded-xl p-2 border border-slate-800">
           <canvas id="sleepChart"></canvas>
         </div>
+
         <div id="chartStatsSummary" class="grid grid-cols-3 gap-2 pt-2 text-center text-xs"></div>
       </div>
     </section>
@@ -214,16 +232,18 @@
         <span class="text-xs font-bold text-slate-300">בחר יום להצגה:</span>
         <select id="historyDateSelect" onchange="renderHistory()" class="bg-slate-950 border border-slate-800 rounded-xl text-xs px-3 py-1.5 font-semibold text-amber-400"></select>
       </div>
+
       <div id="historyList" class="space-y-3"></div>
     </section>
 
   </main>
 
-    <script>
+    <!-- JavaScript App Logic -->
+  <script>
     let activeStage = 1;
     let activeWho = 'אבא';
 
-    // Pre-loaded complete dataset from 28.09.26
+    // Baseline dataset pre-loaded for 28.09.26
     const INITIAL_NIGHTS = [
       {
         id: "night_2026-09-28",
@@ -247,8 +267,8 @@
 
     const INITIAL_DAY_NAPS = [];
 
-    let nightSessions = JSON.parse(localStorage.getItem('ivri_night_sessions_v3')) || INITIAL_NIGHTS;
-    let dayNaps = JSON.parse(localStorage.getItem('ivri_day_naps_v3')) || INITIAL_DAY_NAPS;
+    let nightSessions = JSON.parse(localStorage.getItem('ivri_night_sessions_v4')) || INITIAL_NIGHTS;
+    let dayNaps = JSON.parse(localStorage.getItem('ivri_day_naps_v4')) || INITIAL_DAY_NAPS;
 
     document.getElementById('nightDate').valueAsDate = new Date();
     document.getElementById('dayDate').valueAsDate = new Date();
@@ -302,7 +322,7 @@
       }
     }
 
-    function populateNightDropdowns() {
+    function populateNightDropdowns(preferredSelectId) {
       const wakeSelect = document.getElementById('wakeTargetNight');
       const chartSelect = document.getElementById('chartNightSelect');
       const historySelect = document.getElementById('historyDateSelect');
@@ -314,10 +334,17 @@
       wakeSelect.innerHTML = optionsHtml;
       chartSelect.innerHTML = optionsHtml;
 
+      if (preferredSelectId && nightSessions.some(n => n.id === preferredSelectId)) {
+        wakeSelect.value = preferredSelectId;
+        chartSelect.value = preferredSelectId;
+      }
+
       const historyDates = ['all', ...new Set([...nightSessions.map(n => n.date), ...dayNaps.map(d => d.date)])];
       historySelect.innerHTML = historyDates.map(d => 
         `<option value="${d}">${d === 'all' ? 'כל הימים (הכל)' : formatDateStr(d)}</option>`
       ).join('');
+
+      updateWakeNumberBadge();
     }
 
     function updateWakeNumberBadge() {
@@ -333,7 +360,7 @@
       const timeToSleepMinutes = parseInt(document.getElementById('nightTimeToSleep').value) || 10;
       const how = document.getElementById('nightHow').value;
       const dailyNotes = document.getElementById('nightDailyNotes').value;
-      const morningWake = document.getElementById('morningWake').value || '07:40';
+      const morningWake = document.getElementById('morningWake').value || '07:30';
 
       const nightId = "night_" + date;
       const existingIdx = nightSessions.findIndex(n => n.id === nightId);
@@ -358,8 +385,8 @@
       }
 
       saveData();
-      populateNightDropdowns();
-      alert('השכבת הלילה נשמרה בהצלחה!');
+      populateNightDropdowns(nightId); // Automatically select the newly created night!
+      alert(`השכבת הלילה ל-${formatDateStr(date)} נשמרה בהצלחה! כעת תיעוד היקיצות מחובר ללילה זה.`);
       switchTab('history');
     }
 
@@ -388,7 +415,7 @@
       night.wakes.push(wakeEntry);
       saveData();
       updateWakeNumberBadge();
-      alert(`יקיצה ${wakeEntry.wakeNum} נוספה בהצלחה!`);
+      alert(`יקיצה ${wakeEntry.wakeNum} נוספה בהצלחה לליל ה-${formatDateStr(night.date)}!`);
       switchTab('history');
     }
 
@@ -420,8 +447,8 @@
     }
 
     function saveData() {
-      localStorage.setItem('ivri_night_sessions_v3', JSON.stringify(nightSessions));
-      localStorage.setItem('ivri_day_naps_v3', JSON.stringify(dayNaps));
+      localStorage.setItem('ivri_night_sessions_v4', JSON.stringify(nightSessions));
+      localStorage.setItem('ivri_day_naps_v4', JSON.stringify(dayNaps));
     }
 
     function renderHistory() {
@@ -469,7 +496,7 @@
               <p>⏱️ <strong>זמן להרדמה:</strong> ${n.timeToSleepMinutes} דקות</p>
               ${n.how ? `<p class="italic text-slate-400 bg-slate-950 p-2 rounded-lg">💬 "${n.how}"</p>` : ''}
               ${n.dailyNotes ? `<p class="text-amber-300 bg-amber-500/10 p-2 rounded-lg">📝 <strong>הערות יום:</strong> "${n.dailyNotes}"</p>` : ''}
-              <p>☀️ <strong>יקיצת בוקר:</strong> ${n.morningWake || '07:40'}</p>
+              <p>☀️ <strong>יקיצת בוקר:</strong> ${n.morningWake || '07:30'}</p>
             </div>
 
             <div class="space-y-2 pt-2 border-t border-slate-800">
@@ -538,7 +565,7 @@
         totalWakeMinutes += w.timeToSleepMinutes;
       });
 
-      const morningTime = night.morningWake || '07:40';
+      const morningTime = night.morningWake || '07:30';
       labels.push(morningTime);
       dataPoints.push(1);
 
@@ -619,22 +646,35 @@
       return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
 
+    // Robust CSV Exporter compatible with iOS Safari Blob URLs
     function exportCSV() {
-      let csv = "data:text/csv;charset=utf-8,\uFEFFתאריך,סוג אירוע,שלב,שעה,מי הרדים/טיפל,זמן להרדמה (בדקות),הערות\n";
-      nightSessions.forEach(n => {
-        csv += `"${n.date}","השכבת לילה","${n.stage}","${n.bedtime}","${n.who}","${n.timeToSleepMinutes}","${n.how || ''} | ${n.dailyNotes || ''}"\n`;
-        n.wakes.forEach(w => {
-          csv += `"${n.date}","יקיצה ${w.wakeNum}","${n.stage}","${w.wakeTime}","${w.who}","${w.timeToSleepMinutes}","${w.how || ''}"\n`;
+      try {
+        let csv = "\uFEFFתאריך,סוג אירוע,שלב,שעה,מי הרדים/טיפל,זמן להרדמה (בדקות),הערות\n";
+        
+        nightSessions.forEach(n => {
+          const notesClean = (n.how || '').replace(/"/g, '""') + ' | ' + (n.dailyNotes || '').replace(/"/g, '""');
+          csv += `"${n.date}","השכבת לילה","${n.stage || ''}","${n.bedtime || ''}","${n.who || ''}","${n.timeToSleepMinutes || ''}","${notesClean}"\n`;
+          (n.wakes || []).forEach(w => {
+            csv += `"${n.date}","יקיצה ${w.wakeNum}","${n.stage || ''}","${w.wakeTime || ''}","${w.who || ''}","${w.timeToSleepMinutes || ''}","${(w.how || '').replace(/"/g, '""')}"\n`;
+          });
         });
-      });
-      dayNaps.forEach(d => {
-        csv += `"${d.date}","תנומת יום ${d.napNum}","","${d.bedtime}","${d.who}","${d.timeToSleepMinutes}","${d.how || ''}"\n`;
-      });
 
-      const link = document.createElement("a");
-      link.href = encodeURI(csv);
-      link.download = "ivri_sleep_journal.csv";
-      link.click();
+        dayNaps.forEach(d => {
+          csv += `"${d.date}","תנומת יום ${d.napNum}","","${d.bedtime || ''}","${d.who || ''}","${d.timeToSleepMinutes || ''}","${(d.how || '').replace(/"/g, '""')}"\n`;
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `ivri_sleep_journal_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 500);
+      } catch (e) {
+        alert('שגיאה בייצוא קובץ: ' + e.message);
+      }
     }
   </script>
 </body>
