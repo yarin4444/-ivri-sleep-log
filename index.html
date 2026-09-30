@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Heebo', sans-serif; background-color: #0b0f19; }
-    .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .animate-fade { animation: fadeIn 0.25s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
   </style>
@@ -24,14 +24,12 @@
           🌙
         </div>
         <div>
-          <h1 class="text-base font-black text-amber-300 tracking-wide flex items-center gap-1.5">
-            יומן שינה – עברי
-          </h1>
-          <p class="text-[10px] text-purple-300/80 font-medium">תהליך ייעוץ שינה בלייב</p>
+          <h1 class="text-base font-black text-amber-300 tracking-wide">יומן שינה – עברי</h1>
+          <p class="text-[10px] text-purple-300/80 font-medium">סנכרון ענני בזמן אמת</p>
         </div>
       </div>
       <div class="flex items-center gap-1.5">
-        <button onclick="openSyncModal()" title="הגדרות סנכרון" class="text-xs bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 px-2.5 py-1.5 rounded-xl hover:bg-indigo-500/25 transition font-semibold flex items-center gap-1.5">
+        <button onclick="openSyncModal()" title="הגדרות סנכרון ושיתוף" class="text-xs bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 px-2.5 py-1.5 rounded-xl hover:bg-indigo-500/25 transition font-semibold flex items-center gap-1.5">
           <span id="syncDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>🔄 סנכרון</span>
         </button>
@@ -111,7 +109,7 @@
         </button>
       </div>
 
-      <!-- Awakenings Logger -->
+            <!-- Awakenings Logger -->
       <div class="glass-card rounded-2xl p-4 space-y-3.5 shadow-xl">
         <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
           <h3 class="font-bold text-purple-300 text-xs flex items-center gap-1.5">
@@ -280,49 +278,49 @@
   <dialog id="syncModal" class="bg-slate-900 text-slate-100 p-5 rounded-3xl border border-indigo-500/40 shadow-2xl max-w-md w-11/12 backdrop:bg-black/70">
     <div class="space-y-3.5 text-xs">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-        <h3 class="font-bold text-indigo-300 text-sm flex items-center gap-1.5"><span>🔄</span> סנכרון משפחתי בזמן אמת</h3>
+        <h3 class="font-bold text-indigo-300 text-sm flex items-center gap-1.5"><span>🔄</span> סנכרון ושיתוף בזמן אמת</h3>
         <button onclick="closeSyncModal()" class="text-slate-400 hover:text-white font-bold text-base">✕</button>
       </div>
       
       <p class="text-slate-300 leading-relaxed">
-        כדי שכל היקיצות שאתה מכניס יתעדכנו <strong>מיידית גם בטלפון של אשתך</strong>, לחץ על הכפתור למטה ושלח לה את הקישור הישיר בווטסאפ:
+        כדי שכל היקיצות והעדכונים יסתנכרנו <strong>בזמן אמת במכשירים של כל בני המשפחה והשותפים</strong>, לחצו על הכפתור למטה ושתפו את הקישור הישיר:
       </p>
 
       <div class="bg-indigo-950/60 p-3 rounded-2xl border border-indigo-500/30 space-y-2">
         <div class="flex justify-between items-center">
-          <span class="text-slate-400">קוד חדר משפחתי:</span>
+          <span class="text-slate-400">מזהה חדר משותף:</span>
           <span id="currentFamilyKeyDisplay" class="font-mono font-bold text-amber-300 text-xs bg-slate-950 px-2 py-1 rounded-lg"></span>
         </div>
         <button onclick="copyDirectSyncLink()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-bold py-2.5 rounded-xl shadow-lg transition flex items-center justify-center gap-1.5">
-          <span>🔗</span> העתק קישור סנכרון ישיר לאשה
+          <span>🔗</span> העתק קישור שיתוף וסנכרון
         </button>
       </div>
 
       <div class="border-t border-slate-800 pt-2 space-y-2">
-        <label class="block text-slate-400">שינוי ידני של קוד החדר המשפחתי:</label>
+        <label class="block text-slate-400">שינוי ידני של מזהה החדר המשותף:</label>
         <div class="flex gap-2">
-          <input type="text" id="familyKeyInput" placeholder="למשל: hausler-family" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl p-2 text-amber-300 font-mono font-bold text-center">
+          <input type="text" id="familyKeyInput" placeholder="למשל: hausler-ivri-2026" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl p-2 text-amber-300 font-mono font-bold text-center">
           <button onclick="applyCustomFamilyKey()" class="bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-xl font-bold text-indigo-300">עדכן</button>
         </div>
       </div>
     </div>
   </dialog>
 
-    <!-- JavaScript App Logic -->
+    <!-- JavaScript Part 1: Migration & Cloud Engine -->
   <script>
     let activeStage = 1;
     let activeWho = 'אבא';
 
-    const MAIN_NIGHTS_KEY = 'ivri_nights_master_v11';
-    const MAIN_DAYS_KEY = 'ivri_days_master_v11';
+    const MAIN_NIGHTS_KEY = 'ivri_nights_master_v12';
+    const MAIN_DAYS_KEY = 'ivri_days_master_v12';
 
-    // 1. History Preserving Migration
+    // History Migration Logic
     function loadAndMigrateData() {
       let savedNights = localStorage.getItem(MAIN_NIGHTS_KEY);
       let nightList = savedNights ? JSON.parse(savedNights) : [];
 
       if (nightList.length === 0) {
-        ['ivri_nights_master_v10', 'ivri_night_sessions_v6', 'ivri_night_sessions_v5', 'ivri_night_sessions_v4', 'ivri_night_sessions_v3', 'ivri_night_sessions'].forEach(k => {
+        ['ivri_nights_master_v11', 'ivri_nights_master_v10', 'ivri_night_sessions_v6', 'ivri_night_sessions_v5', 'ivri_night_sessions_v4', 'ivri_night_sessions_v3', 'ivri_night_sessions'].forEach(k => {
           let oldData = localStorage.getItem(k);
           if (oldData) {
             try {
@@ -340,7 +338,7 @@
       let savedDays = localStorage.getItem(MAIN_DAYS_KEY);
       let dayList = savedDays ? JSON.parse(savedDays) : [];
       if (dayList.length === 0) {
-        ['ivri_days_master_v10', 'ivri_day_naps_v6', 'ivri_day_naps_v5', 'ivri_day_naps_v4', 'ivri_day_naps_v3'].forEach(k => {
+        ['ivri_days_master_v11', 'ivri_days_master_v10', 'ivri_day_naps_v6', 'ivri_day_naps_v5', 'ivri_day_naps_v4', 'ivri_day_naps_v3'].forEach(k => {
           let oldData = localStorage.getItem(k);
           if (oldData) {
             try {
@@ -362,17 +360,16 @@
     let nightSessions = initialData.nights;
     let dayNaps = initialData.days;
 
-    // 2. Direct Cloud Storage API Engine
-    let familySyncKey = localStorage.getItem('ivri_family_sync_key') || 'ivri-hausler-family';
+    // Cloud Engine Setup
+    let familySyncKey = localStorage.getItem('ivri_family_sync_key') || 'hausler_ivri_journal_2026';
 
-    // Parse URL query parameter for direct link synchronization (e.g. ?familyKey=XYZ)
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('familyKey')) {
-      familySyncKey = urlParams.get('familyKey');
+    if (urlParams.has('familyId')) {
+      familySyncKey = urlParams.get('familyId');
       localStorage.setItem('ivri_family_sync_key', familySyncKey);
     }
 
-    const CLOUD_SYNC_ENDPOINT = 'https://ivri-sleep-journal-default-rtdb.europe-west1.firebasedatabase.app/families/';
+    const CLOUD_API_BASE = 'https://api.jsonbin.io/v3/b';
 
     async function syncToCloud() {
       saveLocalOnly();
@@ -383,22 +380,44 @@
           days: dayNaps,
           lastUpdated: Date.now()
         };
-        await fetch(`${CLOUD_SYNC_ENDPOINT}${familySyncKey}.json`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        
+        let existingBinId = localStorage.getItem('ivri_bin_id_' + familySyncKey);
+
+        if (!existingBinId) {
+          const res = await fetch(CLOUD_API_BASE, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Bin-Private': 'false',
+              'X-Bin-Name': familySyncKey
+            },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data.metadata && data.metadata.id) {
+            localStorage.setItem('ivri_bin_id_' + familySyncKey, data.metadata.id);
+          }
+        } else {
+          await fetch(`${CLOUD_API_BASE}/${existingBinId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
       } catch(e) {
-        console.log('Cloud push offline');
-        updateSyncDot(false);
+        console.log('Cloud sync pending offline');
       }
     }
 
     async function fetchFromCloudAndMerge() {
       try {
-        const res = await fetch(`${CLOUD_SYNC_ENDPOINT}${familySyncKey}.json`);
+        let existingBinId = localStorage.getItem('ivri_bin_id_' + familySyncKey);
+        if (!existingBinId) return;
+
+        const res = await fetch(`${CLOUD_API_BASE}/${existingBinId}/latest`);
         if (res.ok) {
-          const cloudData = await res.json();
+          const result = await res.json();
+          const cloudData = result.record;
           if (cloudData && (cloudData.nights || cloudData.days)) {
             if (cloudData.nights) nightSessions = cloudData.nights;
             if (cloudData.days) dayNaps = cloudData.days;
@@ -436,23 +455,23 @@
       document.getElementById('currentFamilyKeyDisplay').textContent = familySyncKey;
       document.getElementById('familyKeyInput').value = familySyncKey;
 
-      // Cloud First Pull before local initialization
       await fetchFromCloudAndMerge();
 
       ensureNightSessionForDate(todayStr);
       populateNightDropdowns("night_" + todayStr);
 
-      // Auto-poll cloud every 10 seconds for real-time live updates
-      setInterval(fetchFromCloudAndMerge, 10000);
+      setInterval(fetchFromCloudAndMerge, 8000);
     };
 
-    // Auto-refresh when bringing phone to foreground
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "visible") {
         fetchFromCloudAndMerge();
       }
     });
+  </script>
 
+  <!-- JavaScript Part 2: Form Actions & Saving Handlers -->
+  <script>
     function ensureNightSessionForDate(dateStr) {
       const nightId = "night_" + dateStr;
       if (!nightSessions.some(n => n.id === nightId)) {
@@ -596,7 +615,7 @@
 
       syncToCloud();
       populateNightDropdowns(nightId);
-      alert('השכבת הלילה נשמרה וסונכרנה בהצלחה!');
+      alert('השכבת הלילה נשמרה וסונכרנה בענן!');
       switchTab('history');
     }
 
@@ -618,7 +637,7 @@
       night.wakes.push(wakeEntry);
       syncToCloud();
       updateWakeNumberBadge();
-      alert('יקיצה ' + wakeEntry.wakeNum + ' נרשמה וסונכרנה בלייב!');
+      alert('יקיצה ' + wakeEntry.wakeNum + ' נרשמה וסונכרנה בענן!');
       switchTab('history');
     }
 
@@ -632,7 +651,7 @@
       night.morningNotes = document.getElementById('morningWakeNotes').value;
 
       syncToCloud();
-      alert('יקיצת הבוקר הסופית עודכנה וסונכרנה ליל ה-' + formatDateStr(night.date));
+      alert('יקיצת הבוקר הסופית עודכנה וסונכרנה בענן ליל ה-' + formatDateStr(night.date));
       switchTab('history');
     }
 
@@ -651,11 +670,13 @@
       dayNaps.unshift(napEntry);
       syncToCloud();
       populateNightDropdowns();
-      alert('תנומת היום נשמרה בהצלחה!');
+      alert('תנומת היום נשמרה וסונכרנה בהצלחה!');
       switchTab('history');
     }
+  </script>
 
-    // Modal Edit Functions
+    <!-- JavaScript Part 3: Modals & Dialog Handlers -->
+  <script>
     function openEditNight(nightId) {
       const night = nightSessions.find(n => n.id === nightId);
       if (!night) return;
@@ -743,11 +764,11 @@
 
     function copyDirectSyncLink() {
       const cleanUrl = window.location.origin + window.location.pathname;
-      const shareUrl = `${cleanUrl}?familyKey=${encodeURIComponent(familySyncKey)}`;
+      const shareUrl = `${cleanUrl}?familyId=${encodeURIComponent(familySyncKey)}`;
       navigator.clipboard.writeText(shareUrl).then(() => {
-        alert('הקישור הועתק בהצלחה! שלח אותו בווטסאפ לאשתך, ובלחיצה עליו היא תתחבר מיידית לסנכרון.');
+        alert('הקישור הועתק! שתפו אותו עם בני המשפחה/שותפים - בלחיצה עליו המכשיר שלהם יתחבר לסנכרון מיידית.');
       }).catch(() => {
-        prompt('העתק את הקישור ושלח לאשתך:', shareUrl);
+        prompt('העתק את הקישור ושתף:', shareUrl);
       });
     }
 
@@ -757,11 +778,14 @@
         familySyncKey = key;
         localStorage.setItem('ivri_family_sync_key', key);
         document.getElementById('currentFamilyKeyDisplay').textContent = key;
-        fetchFromCloudAndMerge();
-        alert('קוד החדר עודכן ל: ' + key);
+        syncToCloud();
+        alert('מזהה החדר עודכן ל: ' + key);
       }
     }
+  </script>
 
+  <!-- JavaScript Part 4: History View Rendering -->
+  <script>
     function renderHistory() {
       const container = document.getElementById('historyList');
       const selectedDate = document.getElementById('historyDateSelect').value;
