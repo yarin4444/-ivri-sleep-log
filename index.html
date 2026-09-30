@@ -1,6 +1,6 @@
-# Test building the complete HTML file with Light Mode Theme (matching image_fab51c), export button renamed, morning wake up in CSV export, and zero unwanted headers.
+# Let's draft the complete, pure HTML code with all requested features and verify its structure.
 
-html_code = """<!DOCTYPE html>
+html_content = """<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -27,7 +27,7 @@ html_code = """<!DOCTYPE html>
         </div>
         <div>
           <h1 class="text-base font-black text-purple-950 tracking-wide">יומן שינה – עברי</h1>
-          <p class="text-[10px] text-purple-600 font-semibold">סנכרון Google Sheets בזמן אמת</p>
+          <p class="text-[10px] text-purple-600 font-semibold">סנכרון שינה בזמן אמת</p>
         </div>
       </div>
       <div class="flex items-center gap-1.5">
@@ -245,17 +245,34 @@ html_code = """<!DOCTYPE html>
       </div>
     </section>
 
-    <!-- TAB 3: CHARTS VIEW -->
+    <!-- TAB 3: CHARTS VIEW (STOCK STYLE RANGE SELECTOR) -->
     <section id="view-charts" class="hidden space-y-4 animate-fade">
       <div class="app-card rounded-3xl p-4 space-y-3.5">
-        <div class="flex justify-between items-center">
-          <h2 class="font-bold text-purple-950 text-xs">📈 רצף שינה וערות בלייב</h2>
-          <select id="chartNightSelect" onchange="renderSleepChart()" class="bg-slate-50 border border-slate-200 rounded-xl text-xs px-2.5 py-1 text-purple-800 font-bold focus:outline-none"></select>
+        
+        <!-- Stock-style Range Selector -->
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+          <h2 class="font-bold text-purple-950 text-xs">📈 מנגנון ניתוח ומגמות שינה</h2>
+          
+          <div class="flex bg-slate-100 p-1 rounded-xl text-[11px] font-bold" id="rangeSelectorGroup">
+            <button onclick="setChartRange('day')" id="range-day" class="px-2.5 py-1 rounded-lg bg-white text-purple-700 shadow-sm transition">יום</button>
+            <button onclick="setChartRange('week')" id="range-week" class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800 transition">שבוע</button>
+            <button onclick="setChartRange('month')" id="range-month" class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800 transition">חודש</button>
+            <button onclick="setChartRange('all')" id="range-all" class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800 transition">הכל</button>
+          </div>
         </div>
-        <p class="text-[10px] text-slate-500">ציר עליון: <strong>ער (1)</strong> | ציר תחתון: <strong>ישן (0)</strong> לאורך הלילה:</p>
+
+        <!-- Single Day Picker (Only visible when Range = Day) -->
+        <div id="singleDayPickerContainer" class="flex justify-between items-center bg-slate-50 p-2 rounded-2xl border border-slate-200 text-xs">
+          <span class="text-slate-500 font-semibold">בחר לילה להצגה:</span>
+          <select id="chartNightSelect" onchange="renderSleepChart()" class="bg-white border border-slate-300 rounded-xl px-2.5 py-1 text-purple-800 font-bold focus:outline-none"></select>
+        </div>
+
+        <p id="chartSubtext" class="text-[10px] text-slate-500">ציר עליון: <strong>ער (1)</strong> | ציר תחתון: <strong>ישן (0)</strong> לאורך הלילה:</p>
+        
         <div class="relative h-60 w-full bg-slate-50 rounded-2xl p-2 border border-slate-200">
           <canvas id="sleepChart"></canvas>
         </div>
+        
         <div id="chartStatsSummary" class="grid grid-cols-3 gap-2 pt-1 text-center text-xs"></div>
       </div>
     </section>
@@ -303,6 +320,7 @@ html_code = """<!DOCTYPE html>
 
     let activeStage = 1;
     let activeWho = 'אבא';
+    let currentChartRange = 'day';
 
     // נתונים משוחזרים ראשוניים (כולל ליל ה-28-29 בספטמבר)
     let nightSessions = [
@@ -483,6 +501,32 @@ html_code = """<!DOCTYPE html>
         selected.classList.add('bg-purple-600', 'text-white', 'font-bold');
         selected.classList.remove('bg-slate-100', 'text-slate-700');
       }
+    }
+
+    function setChartRange(range) {
+      currentChartRange = range;
+      document.querySelectorAll('#rangeSelectorGroup > button').forEach(b => {
+        b.classList.remove('bg-white', 'text-purple-700', 'shadow-sm');
+        b.classList.add('text-slate-500');
+      });
+      const activeBtn = document.getElementById('range-' + range);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-white', 'text-purple-700', 'shadow-sm');
+        activeBtn.classList.remove('text-slate-500');
+      }
+
+      const singlePicker = document.getElementById('singleDayPickerContainer');
+      const subtext = document.getElementById('chartSubtext');
+
+      if (range === 'day') {
+        singlePicker.classList.remove('hidden');
+        subtext.innerHTML = 'ציר עליון: <strong>ער (1)</strong> | ציר תחתון: <strong>ישן (0)</strong> לאורך הלילה:';
+      } else {
+        singlePicker.classList.add('hidden');
+        subtext.innerHTML = 'השוואת שעות שינה (סגול) ומספר יקיצות בלילה (ירוק):';
+      }
+
+      renderSleepChart();
     }
 
     function populateNightDropdowns(preferredSelectId) {
@@ -775,74 +819,165 @@ html_code = """<!DOCTYPE html>
     }
 
     let chartInstance = null;
-    function renderSleepChart() {
-      const targetSelect = document.getElementById('chartNightSelect');
-      if (!targetSelect || !targetSelect.value) return;
-      const night = nightSessions.find(n => n.id === targetSelect.value);
-      const ctx = document.getElementById('sleepChart').getContext('2d');
 
-      if (!night) return;
+    function getNightSleepHours(n) {
+      if (!n.bedtime || !n.morningWake) return 8;
+      const b = n.bedtime.split(':');
+      const w = n.morningWake.split(':');
+      let bMins = parseInt(b[0])*60 + parseInt(b[1]);
+      let wMins = parseInt(w[0])*60 + parseInt(w[1]);
+      if (wMins <= bMins) wMins += 24*60;
+      let durationMins = wMins - bMins;
+      let totalAwake = n.timeToSleepMinutes || 0;
+      (n.wakes || []).forEach(wk => totalAwake += (wk.timeToSleepMinutes || 0));
+      let actualSleepMins = Math.max(0, durationMins - totalAwake);
+      return parseFloat((actualSleepMins / 60).toFixed(1));
+    }
+
+    function renderSleepChart() {
+      const ctx = document.getElementById('sleepChart').getContext('2d');
       if (chartInstance) chartInstance.destroy();
 
-      const labels = [night.bedtime];
-      const dataPoints = [1];
+      if (currentChartRange === 'day') {
+        const targetSelect = document.getElementById('chartNightSelect');
+        if (!targetSelect || !targetSelect.value) return;
+        const night = nightSessions.find(n => n.id === targetSelect.value);
+        if (!night) return;
 
-      labels.push(addMinutesToTime(night.bedtime, night.timeToSleepMinutes));
-      dataPoints.push(0);
+        const labels = [night.bedtime];
+        const dataPoints = [1];
 
-      let totalWakeMinutes = night.timeToSleepMinutes;
-
-      night.wakes.forEach(w => {
-        labels.push(w.wakeTime);
-        dataPoints.push(1);
-        labels.push(addMinutesToTime(w.wakeTime, w.timeToSleepMinutes));
+        labels.push(addMinutesToTime(night.bedtime, night.timeToSleepMinutes));
         dataPoints.push(0);
-        totalWakeMinutes += w.timeToSleepMinutes;
-      });
 
-      labels.push(night.morningWake || '07:15');
-      dataPoints.push(1);
+        let totalWakeMinutes = night.timeToSleepMinutes;
 
-      chartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'מצב שינה / ערות',
-            data: dataPoints,
-            stepped: true,
-            borderColor: '#7c3aed',
-            backgroundColor: 'rgba(124, 58, 237, 0.1)',
-            borderWidth: 2.5,
-            fill: true,
-            pointBackgroundColor: '#10b981',
-            pointRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              min: -0.2,
-              max: 1.2,
-              ticks: {
-                stepSize: 1,
-                color: '#64748b',
-                callback: function(v) { return v === 1 ? 'ער 🔔' : v === 0 ? 'ישן 😴' : ''; }
-              },
-              grid: { color: '#f1f5f9' }
-            },
-            x: { ticks: { color: '#64748b' }, grid: { color: '#f8fafc' } }
+        night.wakes.forEach(w => {
+          labels.push(w.wakeTime);
+          dataPoints.push(1);
+          labels.push(addMinutesToTime(w.wakeTime, w.timeToSleepMinutes));
+          dataPoints.push(0);
+          totalWakeMinutes += w.timeToSleepMinutes;
+        });
+
+        labels.push(night.morningWake || '07:15');
+        dataPoints.push(1);
+
+        chartInstance = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'מצב שינה / ערות',
+              data: dataPoints,
+              stepped: true,
+              borderColor: '#7c3aed',
+              backgroundColor: 'rgba(124, 58, 237, 0.1)',
+              borderWidth: 2.5,
+              fill: true,
+              pointBackgroundColor: '#10b981',
+              pointRadius: 4
+            }]
           },
-          plugins: { legend: { display: false } }
-        }
-      });
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                min: -0.2,
+                max: 1.2,
+                ticks: {
+                  stepSize: 1,
+                  color: '#64748b',
+                  callback: function(v) { return v === 1 ? 'ער 🔔' : v === 0 ? 'ישן 😴' : ''; }
+                },
+                grid: { color: '#f1f5f9' }
+              },
+              x: { ticks: { color: '#64748b' }, grid: { color: '#f8fafc' } }
+            },
+            plugins: { legend: { display: false } }
+          }
+        });
 
-      document.getElementById('chartStatsSummary').innerHTML = 
-        '<div class="bg-slate-50 p-2 rounded-2xl border border-slate-200"><span class="text-slate-400 block text-[9px]">השכבה</span><span class="font-bold text-purple-900 font-mono">' + night.bedtime + '</span></div>' +
-        '<div class="bg-slate-50 p-2 rounded-2xl border border-slate-200"><span class="text-slate-400 block text-[9px]">יקיצות</span><span class="font-bold text-indigo-900 font-mono">' + night.wakes.length + '</span></div>' +
-        '<div class="bg-slate-50 p-2 rounded-2xl border border-slate-200"><span class="text-slate-400 block text-[9px]">סה"כ ערות</span><span class="font-bold text-purple-900 font-mono">' + totalWakeMinutes + ' דק\'</span></div>';
+        document.getElementById('chartStatsSummary').innerHTML = 
+          '<div class="bg-slate-50 p-2 rounded-2xl border border-slate-200"><span class="text-slate-400 block text-[9px]">השכבה</span><span class="font-bold text-purple-900 font-mono">' + night.bedtime + '</span></div>' +
+          '<div class="bg-slate-50 p-2 rounded-2xl border border-slate-200"><span class="text-slate-400 block text-[9px]">יקיצות</span><span class="font-bold text-indigo-900 font-mono">' + night.wakes.length + '</span></div>' +
+          '<div class="bg-slate-50 p-2 rounded-2xl border border-slate-200"><span class="text-slate-400 block text-[9px]">סה"כ ערות</span><span class="font-bold text-purple-900 font-mono">' + totalWakeMinutes + ' דק\'</span></div>';
+
+      } else {
+        // Multi-day Stock Style Trend Chart
+        let sortedNights = [...nightSessions].sort((a,b) => a.date.localeCompare(b.date));
+        if (currentChartRange === 'week') {
+          sortedNights = sortedNights.slice(-7);
+        } else if (currentChartRange === 'month') {
+          sortedNights = sortedNights.slice(-30);
+        }
+
+        const labels = sortedNights.map(n => formatDateStr(n.date));
+        const sleepHoursData = sortedNights.map(n => getNightSleepHours(n));
+        const wakeCountData = sortedNights.map(n => (n.wakes || []).length);
+
+        chartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                type: 'line',
+                label: 'שעות שינה',
+                data: sleepHoursData,
+                borderColor: '#7c3aed',
+                backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                borderWidth: 2.5,
+                tension: 0.3,
+                yAxisID: 'y'
+              },
+              {
+                type: 'bar',
+                label: 'מספר יקיצות',
+                data: wakeCountData,
+                backgroundColor: '#10b981',
+                borderRadius: 6,
+                yAxisID: 'y1'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                title: { display: true, text: 'שעות שינה', color: '#7c3aed', font: { size: 10, weight: 'bold' } },
+                ticks: { color: '#64748b' },
+                grid: { color: '#f1f5f9' }
+              },
+              y1: {
+                type: 'linear',
+                display: true,
+                position: 'left',
+                title: { display: true, text: 'יקיצות', color: '#10b981', font: { size: 10, weight: 'bold' } },
+                ticks: { stepSize: 1, color: '#64748b' },
+                grid: { drawOnChartArea: false }
+              },
+              x: { ticks: { color: '#64748b' }, grid: { color: '#f8fafc' } }
+            },
+            plugins: {
+              legend: { display: true, position: 'top', labels: { boxWidth: 10, font: { size: 10 } } }
+            }
+          }
+        });
+
+        const avgSleep = (sleepHoursData.reduce((a,b)=>a+b, 0) / (sleepHoursData.length || 1)).toFixed(1);
+        const avgWakes = (wakeCountData.reduce((a,b)=>a+b, 0) / (wakeCountData.length || 1)).toFixed(1);
+
+        document.getElementById('chartStatsSummary').innerHTML = 
+          '<div class="bg-slate-50 p-2 rounded-2xl border border-slate-200"><span class="text-slate-400 block text-[9px]">ממוצע שינה</span><span class="font-bold text-purple-900 font-mono">' + avgSleep + ' שעות</span></div>' +
+          '<div class="bg-slate-50 p-2 rounded-2xl border border-slate-200"><span class="text-slate-400 block text-[9px]">ממוצע יקיצות</span><span class="font-bold text-emerald-700 font-mono">' + avgWakes + ' בלילה</span></div>' +
+          '<div class="bg-slate-50 p-2 rounded-2xl border border-slate-200"><span class="text-slate-400 block text-[9px]">לילות מנותחים</span><span class="font-bold text-purple-900 font-mono">' + sortedNights.length + ' לילות</span></div>';
+      }
     }
 
     function addMinutesToTime(timeStr, mins) {
@@ -872,7 +1007,6 @@ html_code = """<!DOCTYPE html>
             csv += '"' + n.date + '","יקיצת לילה ' + w.wakeNum + '","' + (n.stage || '') + '","' + (w.wakeTime || '') + '","' + (w.who || '') + '","' + (w.timeToSleepMinutes || '') + '","' + (w.how || '').replace(/"/g, '""') + '"\n';
           });
 
-          // הוספת יקיצת הבוקר הסופית לקובץ הייצוא!
           if (n.morningWake) {
             csv += '"' + n.date + '","יקיצת בוקר סופית","' + (n.stage || '') + '","' + n.morningWake + '","","","' + (n.morningNotes || '').replace(/"/g, '""') + '"\n';
           }
@@ -898,4 +1032,4 @@ html_code = """<!DOCTYPE html>
 </html>
 """
 
-print("Length:", len(html_code))
+print("HTML Length:", len(html_content))
