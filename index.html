@@ -1,6 +1,4 @@
-# Let's draft the complete, pure HTML code with all requested features and verify its structure.
-
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -315,14 +313,13 @@ html_content = """<!DOCTYPE html>
 
   <!-- JavaScript App Logic connected to Google Sheets -->
   <script>
-    // ⚠️ הדבק כאן בתוך הגרשיים את הקישור שקיבלת מ-Google Apps Script (הקישור שמתחיל ב-https://script.google.com/macros/s/...):
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzFsxStyRNkdh9g0gDyOhYkGOm2tOjv_oMM6qh1sdIw6kuMFrErPTlna2u_r3j97yE/exec';
 
     let activeStage = 1;
     let activeWho = 'אבא';
     let currentChartRange = 'day';
 
-    // נתונים משוחזרים ראשוניים (כולל ליל ה-28-29 בספטמבר)
+    // נתונים משוחזרים ראשוניים
     let nightSessions = [
       {
         id: "night_2026-09-28",
@@ -346,11 +343,42 @@ html_content = """<!DOCTYPE html>
     ];
     let dayNaps = [];
 
+    // מיזוג חכם של הלילות למניעת אובדן נתונים
+    function smartMergeNights(localNights, cloudNights) {
+      const map = new Map();
+
+      [...cloudNights, ...localNights].forEach(n => {
+        if (!map.has(n.id)) {
+          map.set(n.id, { ...n, wakes: [...(n.wakes || [])] });
+        } else {
+          const existing = map.get(n.id);
+          const mergedN = { ...existing, ...n };
+          
+          // מיזוג יקיצות ייחודיות
+          const wakeMap = new Map();
+          (existing.wakes || []).forEach(w => wakeMap.set(w.id || w.wakeTime, w));
+          (n.wakes || []).forEach(w => wakeMap.set(w.id || w.wakeTime, w));
+          
+          mergedN.wakes = Array.from(wakeMap.values());
+          map.set(n.id, mergedN);
+        }
+      });
+
+      return Array.from(map.values()).sort((a,b) => b.date.localeCompare(a.date));
+    }
+
+    // מיזוג חכם של תנומות יום
+    function smartMergeDays(localDays, cloudDays) {
+      const map = new Map();
+      [...cloudDays, ...localDays].forEach(d => map.set(d.id, d));
+      return Array.from(map.values()).sort((a,b) => b.date.localeCompare(a.date));
+    }
+
     // שמירת נתונים ל-Google Sheets
     async function syncToCloud() {
       saveLocalOnly();
       updateSyncDot(true);
-      if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('הדבק_כאן')) return;
+      if (!GOOGLE_SCRIPT_URL) return;
       
       try {
         const payload = {
@@ -371,23 +399,25 @@ html_content = """<!DOCTYPE html>
       }
     }
 
-    // משיכת נתונים מעודכנים מ-Google Sheets
+    // משיכת נתונים מעודכנים מ-Google Sheets ומיזוגם בבטחה
     async function fetchFromCloudAndMerge() {
-      if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('הדבק_כאן')) return;
+      if (!GOOGLE_SCRIPT_URL) return;
       try {
         const res = await fetch(GOOGLE_SCRIPT_URL);
         if (res.ok) {
           const cloudData = await res.json();
-          if (!cloudData || (!cloudData.nights && !cloudData.days)) {
-            syncToCloud();
-            return;
+          if (cloudData) {
+            if (cloudData.nights && cloudData.nights.length > 0) {
+              nightSessions = smartMergeNights(nightSessions, cloudData.nights);
+            }
+            if (cloudData.days && cloudData.days.length > 0) {
+              dayNaps = smartMergeDays(dayNaps, cloudData.days);
+            }
+            saveLocalOnly();
+            populateNightDropdowns();
+            if (!document.getElementById('view-history').classList.contains('hidden')) renderHistory();
+            if (!document.getElementById('view-charts').classList.contains('hidden')) renderSleepChart();
           }
-          if (cloudData.nights && cloudData.nights.length > 0) nightSessions = cloudData.nights;
-          if (cloudData.days) dayNaps = cloudData.days;
-          saveLocalOnly();
-          populateNightDropdowns();
-          if (!document.getElementById('view-history').classList.contains('hidden')) renderHistory();
-          if (!document.getElementById('view-charts').classList.contains('hidden')) renderSleepChart();
           updateSyncDot(true);
         }
       } catch(e) {
@@ -418,8 +448,11 @@ html_content = """<!DOCTYPE html>
       let localNights = localStorage.getItem('ivri_nights_saved');
       if (localNights) nightSessions = JSON.parse(localNights);
 
+      // קודם טוענים וממזגים מהענן
       await fetchFromCloudAndMerge();
-      ensureNightSessionForDate(todayStr);
+      
+      // יצירת הכרטיס להיום בלבד - ללא שילוח סנכרון דורס בלולאה!
+      ensureNightSessionForDate(todayStr, false);
       populateNightDropdowns("night_" + todayStr);
 
       setInterval(fetchFromCloudAndMerge, 8000);
@@ -431,7 +464,8 @@ html_content = """<!DOCTYPE html>
       }
     });
 
-    function ensureNightSessionForDate(dateStr) {
+    // הפרדה: ברירת המחדל autoSync היא false כדי לא לדרוס את הענן בטעינה ראשונית
+    function ensureNightSessionForDate(dateStr, autoSync = false) {
       const nightId = "night_" + dateStr;
       if (!nightSessions.some(n => n.id === nightId)) {
         nightSessions.unshift({
@@ -447,14 +481,14 @@ html_content = """<!DOCTYPE html>
           morningNotes: '',
           wakes: []
         });
-        syncToCloud();
+        if (autoSync) syncToCloud();
       }
     }
 
     function handleNightDateChange() {
       const d = document.getElementById('nightDate').value;
       if (d) {
-        ensureNightSessionForDate(d);
+        ensureNightSessionForDate(d, true);
         populateNightDropdowns("night_" + d);
       }
     }
@@ -905,7 +939,6 @@ html_content = """<!DOCTYPE html>
           '<div class="bg-slate-50 p-2 rounded-2xl border border-slate-200"><span class="text-slate-400 block text-[9px]">סה"כ ערות</span><span class="font-bold text-purple-900 font-mono">' + totalWakeMinutes + ' דק\'</span></div>';
 
       } else {
-        // Multi-day Stock Style Trend Chart
         let sortedNights = [...nightSessions].sort((a,b) => a.date.localeCompare(b.date));
         if (currentChartRange === 'week') {
           sortedNights = sortedNights.slice(-7);
@@ -1030,6 +1063,3 @@ html_content = """<!DOCTYPE html>
   </script>
 </body>
 </html>
-"""
-
-print("HTML Length:", len(html_content))
