@@ -343,13 +343,48 @@
     ];
     let dayNaps = [];
 
+    // פונקציה לחישוב דקות יחסיות משעת ההשכבה (תומכת במעבר חצות הלילה)
+    function timeToNightMinutes(timeStr, bedtimeStr) {
+      if (!timeStr) return 0;
+      const parts = timeStr.split(':');
+      let h = parseInt(parts[0], 10);
+      let m = parseInt(parts[1], 10);
+      let mins = h * 60 + m;
+
+      if (bedtimeStr) {
+        const bParts = bedtimeStr.split(':');
+        let bh = parseInt(bParts[0], 10);
+        let bm = parseInt(bParts[1], 10);
+        let bMins = bh * 60 + bm;
+        
+        // אם שעת היקיצה קטנה משעת ההשכבה (למשל 02:00 לעומת 19:30), מוסיפים 24 שעות (1440 דק')
+        if (mins < bMins - 180) {
+          mins += 1440;
+        }
+      }
+      return mins;
+    }
+
+    // מיון יקיצות הלילה לפי סדר כרונולוגי ועדכון מספרי היקיצות
+    function sortNightWakes(night) {
+      if (!night || !night.wakes) return;
+      night.wakes.sort((a, b) => {
+        return timeToNightMinutes(a.wakeTime, night.bedtime) - timeToNightMinutes(b.wakeTime, night.bedtime);
+      });
+      night.wakes.forEach((w, i) => {
+        w.wakeNum = i + 1;
+      });
+    }
+
     // מיזוג חכם של הלילות למניעת אובדן נתונים
     function smartMergeNights(localNights, cloudNights) {
       const map = new Map();
 
       [...cloudNights, ...localNights].forEach(n => {
         if (!map.has(n.id)) {
-          map.set(n.id, { ...n, wakes: [...(n.wakes || [])] });
+          const nightCopy = { ...n, wakes: [...(n.wakes || [])] };
+          sortNightWakes(nightCopy);
+          map.set(n.id, nightCopy);
         } else {
           const existing = map.get(n.id);
           const mergedN = { ...existing, ...n };
@@ -360,6 +395,7 @@
           (n.wakes || []).forEach(w => wakeMap.set(w.id || w.wakeTime, w));
           
           mergedN.wakes = Array.from(wakeMap.values());
+          sortNightWakes(mergedN);
           map.set(n.id, mergedN);
         }
       });
@@ -371,7 +407,10 @@
     function smartMergeDays(localDays, cloudDays) {
       const map = new Map();
       [...cloudDays, ...localDays].forEach(d => map.set(d.id, d));
-      return Array.from(map.values()).sort((a,b) => b.date.localeCompare(a.date));
+      return Array.from(map.values()).sort((a,b) => {
+        if (a.date !== b.date) return b.date.localeCompare(a.date);
+        return (a.bedtime || '').localeCompare(b.bedtime || '');
+      });
     }
 
     // שמירת נתונים ל-Google Sheets
@@ -448,10 +487,8 @@
       let localNights = localStorage.getItem('ivri_nights_saved');
       if (localNights) nightSessions = JSON.parse(localNights);
 
-      // קודם טוענים וממזגים מהענן
       await fetchFromCloudAndMerge();
       
-      // יצירת הכרטיס להיום בלבד - ללא שילוח סנכרון דורס בלולאה!
       ensureNightSessionForDate(todayStr, false);
       populateNightDropdowns("night_" + todayStr);
 
@@ -464,7 +501,6 @@
       }
     });
 
-    // הפרדה: ברירת המחדל autoSync היא false כדי לא לדרוס את הענן בטעינה ראשונית
     function ensureNightSessionForDate(dateStr, autoSync = false) {
       const nightId = "night_" + dateStr;
       if (!nightSessions.some(n => n.id === nightId)) {
@@ -635,6 +671,7 @@
         night.dailyNotes = dailyNotes;
       }
 
+      sortNightWakes(night);
       syncToCloud();
       populateNightDropdowns(nightId);
       alert('השכבת הלילה נשמרה וסונכרנה ל-Google Sheets!');
@@ -649,7 +686,7 @@
 
       const wakeEntry = {
         id: 'wake_' + Date.now(),
-        wakeNum: night.wakes.length + 1,
+        wakeNum: 0,
         wakeTime: document.getElementById('wakeTime').value,
         timeToSleepMinutes: parseInt(document.getElementById('wakeTimeToSleep').value) || 5,
         who: document.getElementById('wakeWho').value,
@@ -657,9 +694,10 @@
       };
 
       night.wakes.push(wakeEntry);
+      sortNightWakes(night);
       syncToCloud();
       updateWakeNumberBadge();
-      alert('יקיצה ' + wakeEntry.wakeNum + ' נרשמה וסונכרנה ל-Google Sheets!');
+      alert('היקיצה נרשמה וסונכרנה בהצלחה בסדר הכרונולוגי!');
       switchTab('history');
     }
 
@@ -690,6 +728,11 @@
       };
 
       dayNaps.unshift(napEntry);
+      dayNaps.sort((a,b) => {
+        if (a.date !== b.date) return b.date.localeCompare(a.date);
+        return (a.bedtime || '').localeCompare(b.bedtime || '');
+      });
+
       syncToCloud();
       populateNightDropdowns();
       alert('תנומת היום נשמרה וסונכרנה בהצלחה!');
@@ -736,6 +779,7 @@
         night.how = document.getElementById('editHow').value;
         night.dailyNotes = document.getElementById('editDailyNotes').value;
         night.morningWake = document.getElementById('editMorningWake').value;
+        sortNightWakes(night);
         syncToCloud();
         renderHistory();
       }
@@ -755,7 +799,7 @@
       const night = nightSessions.find(n => n.id === nightId);
       if (night && confirm('למחוק יקיצה זו?')) {
         night.wakes.splice(wakeIdx, 1);
-        night.wakes.forEach((w, i) => w.wakeNum = i + 1);
+        sortNightWakes(night);
         syncToCloud();
         renderHistory();
       }
@@ -808,6 +852,7 @@
       let html = '';
 
       filteredNights.forEach(n => {
+        sortNightWakes(n);
         let totalAwake = n.timeToSleepMinutes;
         n.wakes.forEach(w => totalAwake += (w.timeToSleepMinutes || 0));
 
@@ -877,6 +922,8 @@
         if (!targetSelect || !targetSelect.value) return;
         const night = nightSessions.find(n => n.id === targetSelect.value);
         if (!night) return;
+
+        sortNightWakes(night);
 
         const labels = [night.bedtime];
         const dataPoints = [1];
@@ -1016,8 +1063,8 @@
     function addMinutesToTime(timeStr, mins) {
       if (!timeStr) return '00:00';
       const parts = timeStr.split(':');
-      let h = parseInt(parts[0]);
-      let m = parseInt(parts[1]) + mins;
+      let h = parseInt(parts[0], 10);
+      let m = parseInt(parts[1], 10) + mins;
       h = (h + Math.floor(m / 60)) % 24;
       m = m % 60;
       return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
@@ -1033,6 +1080,7 @@
       try {
         let csv = "\uFEFFתאריך,סוג אירוע,שלב,שעה,מי הרדים/טיפל,זמן להרדמה/ערות (בדקות),הערות / אופן הרדמה\n";
         nightSessions.forEach(n => {
+          sortNightWakes(n);
           const notesClean = (n.how || '').replace(/"/g, '""') + ' | ' + (n.dailyNotes || '').replace(/"/g, '""');
           csv += '"' + n.date + '","השכבת לילה","' + (n.stage || '') + '","' + (n.bedtime || '') + '","' + (n.who || '') + '","' + (n.timeToSleepMinutes || '') + '","' + notesClean + '"\n';
           
